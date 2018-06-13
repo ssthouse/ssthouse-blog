@@ -14,7 +14,7 @@
 
 
 
-##Content
+## Content
 
 打个比方, 你想用D3画一个 `散点图` , 并且你想创建一个 SVG元素来可视化你的数据. 你会惊讶的发现: D3居然没有直接创建多个DOM元素的方法! 怎么回事?
 
@@ -111,10 +111,10 @@ circle.exit().transition()
 
 [Mike Bostock 的实现](https://bl.ocks.org/mbostock/3808234)
 
-![join example](https://raw.githubusercontent.com/ssthouse/d3-blog/master/thinking-with-join/join_example.png)
+![join example](https://raw.githubusercontent.com/ssthouse/d3-blog/master/thinking-with-join/join_example.gif)
 
 
 ### 这里是我对这个例子的实现(也包括一些其他的案例): 
- [在线演示](https://ssthouse.github.io/d3-practice/#/root)
- [源代码](https://github.com/ssthouse/d3-practice)
+- [在线演示](https://ssthouse.github.io/d3-practice/#/root)
+- [源代码](https://github.com/ssthouse/d3-practice)
 
