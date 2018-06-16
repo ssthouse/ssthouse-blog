@@ -1,6 +1,6 @@
 
 
-# 用D3.js, 十分钟实现字符跳动效果
+# 用D3.js 十分钟实现字符跳动效果
 
 ## 注
 
@@ -153,8 +153,188 @@ text.enter().append("text")
       .attr("x", function(d, i) { return i * 32; });   // 将坐标计算移动到 merge后 (enter & update)
 ```
 
+**现在我们的代码长这样, [点我在线运行](https://jsfiddle.net/ssthouse/bo7guhm2/):**
+
+```html
+<script>
+
+var alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+
+var svg = d3.select("svg"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height"),
+    g = svg.append("g").attr("transform", "translate(32," + (height / 2) + ")");
+
+function update(data) {
+
+  // DATA JOIN
+  // Join new data with old elements, if any.
+  var text = g.selectAll("text")
+    .data(data, function(d) { return d; });
+
+  // UPDATE
+  // Update old elements as needed.
+  text.attr("class", "update");
+
+  // ENTER
+  // Create new elements as needed.
+  //
+  // ENTER + UPDATE
+  // After merging the entered elements with the update selection,
+  // apply operations to both.
+  text.enter().append("text")
+      .attr("class", "enter")
+      .attr("dy", ".35em")
+      .text(function(d) { return d; })
+    .merge(text)
+      .attr("x", function(d, i) { return i * 32; });
+
+  // EXIT
+  // Remove old elements as needed.
+  text.exit().remove();
+}
+
+// The initial display.
+update(alphabet);
+
+// Grab a random sample of letters from the alphabet, in alphabetical order.
+d3.interval(function() {
+  update(d3.shuffle(alphabet)
+      .slice(0, Math.floor(Math.random() * 26))
+      .sort());
+}, 1500);
+
+</script>
+```
 
 
-现在我们得到的效果:
+
+**现在我们得到的效果:**
 
 ![second step](https://github.com/ssthouse/d3-blog/raw/master/charactor-jump/second-step.gif)
+
+
+
+### 3.添加动画
+
+动画能让我们更好的观察元素的变化过程和状态, 给不同状态的元素赋予不同的动画可以更直观的展示我们的数据.
+
+现在我们给字符的变化增加动画效果, 并把字符移除时的颜色变化补上.
+
+首先我们定义一个 **transition**变量, 并设置其动画间隔为 750
+
+```javascript
+var t = d3.transition()
+      .duration(750);
+```
+
+在D3中使用动画非常简单, 在动画前指定元素的一些属性, 调用动画, 再指定动画后的一些属性. D3会自动根据插值器生成动画. 
+
+下面的代码对于离开界面的字符(exit selection)进行了处理:
+
+```javascript
+text.exit()
+      .attr("class", "exit")          // 动画前, 设置class属性, 字体变红
+    .transition(t)                    // 设置动画
+      .attr("y", 60)                  // 设置y坐标, 使元素向下离开界面 (y: 0 => 60)
+      .style("fill-opacity", 1e-6)    // 设置透明度, 使元素渐变消失 (opacity: 1 => 0)
+      .remove();                      // 最后将其移出界面
+```
+
+同样的, 我们对 **enter** 和 **update** selection进行处理:
+
+```javascript
+// UPDATE old elements present in new data.
+  text.attr("class", "update")
+      .attr("y", 0)
+      .style("fill-opacity", 1)
+    .transition(t)
+      .attr("x", function(d, i) { return i * 32; });
+
+  // ENTER new elements present in new data.
+  text.enter().append("text")
+      .attr("class", "enter")
+      .attr("dy", ".35em")
+      .attr("y", -60)
+      .attr("x", function(d, i) { return i * 32; })
+      .style("fill-opacity", 1e-6)
+      .text(function(d) { return d; })
+    .transition(t)
+      .attr("y", 0)
+      .style("fill-opacity", 1);
+```
+
+**最终我们的代码长这样, [点我运行](https://jsfiddle.net/ssthouse/h9mp7a34/)**
+
+```javascript
+<script>
+
+var alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+
+var svg = d3.select("svg"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height"),
+    g = svg.append("g").attr("transform", "translate(32," + (height / 2) + ")");
+
+function update(data) {
+  var t = d3.transition()
+      .duration(750);
+
+  // JOIN new data with old elements.
+  var text = g.selectAll("text")
+    .data(data, function(d) { return d; });
+
+  // EXIT old elements not present in new data.
+  text.exit()
+      .attr("class", "exit")
+    .transition(t)
+      .attr("y", 60)
+      .style("fill-opacity", 1e-6)
+      .remove();
+
+  // UPDATE old elements present in new data.
+  text.attr("class", "update")
+      .attr("y", 0)
+      .style("fill-opacity", 1)
+    .transition(t)
+      .attr("x", function(d, i) { return i * 32; });
+
+  // ENTER new elements present in new data.
+  text.enter().append("text")
+      .attr("class", "enter")
+      .attr("dy", ".35em")
+      .attr("y", -60)
+      .attr("x", function(d, i) { return i * 32; })
+      .style("fill-opacity", 1e-6)
+      .text(function(d) { return d; })
+    .transition(t)
+      .attr("y", 0)
+      .style("fill-opacity", 1);
+}
+
+// The initial display.
+update(alphabet);
+
+// Grab a random sample of letters from the alphabet, in alphabetical order.
+d3.interval(function() {
+  update(d3.shuffle(alphabet)
+      .slice(0, Math.floor(Math.random() * 26))
+      .sort());
+}, 1500);
+
+</script>
+```
+
+**最终效果:**
+
+![final demo](https://github.com/ssthouse/d3-blog/raw/master/charactor-jump/final_demo.gif)
+
+
+
+## 如果觉得不错的话, 不妨关注一下 : )
+
+[github主页](https://github.com/ssthouse)
+
+[知乎专栏](https://zhuanlan.zhihu.com/c_196857379)
+
+[掘金](https://juejin.im/user/57bc46c8efa631005a891573/posts)
