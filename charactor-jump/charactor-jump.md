@@ -131,3 +131,30 @@ text.exit().remove();
 
 ### 2. 为字符设定key值
 
+如果你观察仔细的话, 你可能已经发现第一步实现的效果中: 新加的字符总是出现在最后. 这显然不是我们想要的效果, 新加的字符出现的位置应该是随机的. 那么出现现在这个效果的原因是什么呢?
+
+答案在于我们在绑定字符数据时: `data(data)` 并没有指定data的key值, 那么**d3**会默认使用index作为key, 这样就是为什么新增加的字符总是出现在最后面.
+
+所以我们为字符加入**key**值的**accessor**:
+
+```javascript
+  var text = g.selectAll("text")
+    .data(data, function(d) { return d; });
+```
+
+现在 **key** 值绑定好后, 已经存在的字符在update时text已经不会再改变, 但是坐标需要重新计算, 所以我们做以下改动:
+
+```javascript
+text.enter().append("text")
+      .attr("class", "enter")
+      .attr("dy", ".35em")
+      .text(function(d) { return d; })                 // 将text赋值移动到 enter中
+    .merge(text)
+      .attr("x", function(d, i) { return i * 32; });   // 将坐标计算移动到 merge后 (enter & update)
+```
+
+
+
+现在我们得到的效果:
+
+![second step](https://github.com/ssthouse/d3-blog/raw/master/charactor-jump/second-step.gif)
