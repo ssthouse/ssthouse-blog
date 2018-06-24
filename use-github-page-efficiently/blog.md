@@ -18,9 +18,9 @@
 
 ## 选择 github pages 的理由
 
-1.  使用 0 成本: github pages 集成在 github 中, 直接和代码管理绑定在一起, 随着代码更新自动重新部署, 使用非常方便.
-2.  免费: 免费提供 username.github.io 的域名, 免费的静态网站服务器.
-3.  无数量限制: github pages 没有使用的数量限制, 每一个 github repository 都可以部署一个静态网站.
+1.  **使用零成本:** github pages 集成在 github 中, 直接和代码管理绑定在一起, 随着代码更新自动重新部署, 使用非常方便.
+2.  **免费:** 免费提供 username.github.io 的域名, 免费的静态网站服务器.
+3.  **无数量限制:** github pages 没有使用的数量限制, 每一个 github repository 都可以部署一个静态网站.
 
 ## 使用流程
 
@@ -28,7 +28,7 @@
 
 首先我们介绍一下部署最基础的静态网页, 最终的效果是展示出一个 `Hello, github pages :)` 页面.
 
-#### 创建一个 github 项目
+#### 1.1 创建一个 github 项目
 
 前往 [github 官网](https://github.com), 点击 `New repository` 创建新项目. 填入项目基本信息, 点击 `Create Repository` 确认.
 
@@ -38,7 +38,7 @@
 
 ![after_create_repository](https://raw.githubusercontent.com/ssthouse/d3-blog/master/use-github-page-efficiently/after_create_repository.png)
 
-#### 首先, 我们为该项目开启 github page 选项
+#### 1.2 为repository 开启 github page 选项
 
 如图, 我们选中 _Setting_ tab
 ![repository_setting_page](https://raw.githubusercontent.com/ssthouse/d3-blog/master/use-github-page-efficiently/repository_setting_page.png)
@@ -48,11 +48,11 @@
 
 最后我们会得到一个链接, 通过这个链接, 待会我们就能访问到我们这个 repository 的 github pages 页面.
 
-#### 现在, 我们将代码 clone 到本地, 并创建几个基本文件
+#### 1.3 现在, 我们将代码 clone 到本地, 并创建几个基本文件
 
 ![create_sample_files](https://raw.githubusercontent.com/ssthouse/d3-blog/master/use-github-page-efficiently/create_sample_files.png)
 
-#### 然后我们加点基础代码
+#### 1.4 然后我们加点基础代码
 
 注意这里 _html_ 因为和 _css_ 以及 _js_ 放在同一目录, 所以我们用相对路径来引用
 
@@ -95,7 +95,7 @@ window.onload = function() {
 }
 ```
 
-#### 将代码更新到 github 仓库
+#### 1.5 将代码更新到 github 仓库
 
 ```shell
     cd github-pages-demo
@@ -104,9 +104,14 @@ window.onload = function() {
     git push
 ```
 
-#### 看看效果
+#### 1.6 看看效果
+
 现在我们访问之前开启 github pages选项时获得的 url, 就可以看到效果了
 > 注: 代码push上去后可能要过几分钟才会部署好生效
+
+效果如图 :arrow_down:
+
+![simplest demo](https://raw.githubusercontent.com/ssthouse/d3-blog/master/use-github-page-efficiently/github_page_simple_result.png)
 
 ### 二. 使用前端框架时, 如何使用 github pages
 
