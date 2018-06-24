@@ -22,11 +22,15 @@
 2.  **免费:** 免费提供 username.github.io 的域名, 免费的静态网站服务器.
 3.  **无数量限制:** github pages 没有使用的数量限制, 每一个 github repository 都可以部署一个静态网站.
 
-## 使用流程
+## 使用方法
 
 ### 一. 部署静态网页
 
 首先我们介绍一下部署最基础的静态网页, 最终的效果是展示出一个 `Hello, github pages :)` 页面.
+
+> demo 地址: [github repository](https://github.com/ssthouse/github-pages-demo/settings)
+>
+> github page 地址: [https://ssthouse.github.io/github-pages-demo/](https://ssthouse.github.io/github-pages-demo/)
 
 #### 1.1 创建一个 github 项目
 
@@ -38,7 +42,7 @@
 
 ![after_create_repository](https://raw.githubusercontent.com/ssthouse/d3-blog/master/use-github-page-efficiently/after_create_repository.png)
 
-#### 1.2 为repository 开启 github page 选项
+#### 1.2 为 repository 开启 github page 选项
 
 如图, 我们选中 _Setting_ tab
 ![repository_setting_page](https://raw.githubusercontent.com/ssthouse/d3-blog/master/use-github-page-efficiently/repository_setting_page.png)
@@ -106,8 +110,9 @@ window.onload = function() {
 
 #### 1.6 看看效果
 
-现在我们访问之前开启 github pages选项时获得的 url, 就可以看到效果了
-> 注: 代码push上去后可能要过几分钟才会部署好生效
+现在我们访问之前开启 github pages 选项时获得的 url, 就可以看到效果了
+
+> 注: 代码 push 上去后, 可能要过几分钟才会部署好生效
 
 效果如图 :arrow_down:
 
@@ -115,6 +120,15 @@ window.onload = function() {
 
 ### 二. 使用前端框架时, 如何使用 github pages
 
-这里用 Vue template 做介绍, rect 和 angular 进行类似的配置即可.
+这里用 Vue 的官方 template 做介绍, rect 和 angular 进行类似的配置即可.
+
+#### 创建项目
+
+首先我们用 vue-cli 创建一个标准的 webpack 管理的 vue 项目 ([点我安装 vue-cli](https://cli.vuejs.org/guide/creating-a-project.html#installation)), 
+
+#### 修改编译配置
+
+默认配置会build到 dist文件夹.
+如果我们想让github pages识别到我们的网页文件, 我们我们可以手动把 dist中的文件手动拷贝到
 
 ### 三. 只可以是静态网站吗?
