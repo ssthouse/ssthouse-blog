@@ -22,15 +22,15 @@
 
 前往 [github 官网](https://github.com), 点击 `New repository` 创建新项目. 填入项目基本信息, 点击 `Create Repository` 确认.
 
-![new_repo_input_page](https://raw.githubusercontent.com/ssthouse/d3-blog/master/use-github-page-efficiently/new_repo_input_page.png)
+![create_repository](https://raw.githubusercontent.com/ssthouse/d3-blog/master/use-github-page-efficiently/create_repository.png)
 
 确认完成后会看到如下页面:
 
-![new_repo_finish_page](https://raw.githubusercontent.com/ssthouse/d3-blog/master/use-github-page-efficiently/new_repo_finish_page.png)
+![after_create_repository](https://raw.githubusercontent.com/ssthouse/d3-blog/master/use-github-page-efficiently/after_create_repository.png)
 
 #### 现在, 我们将代码 clone 到本地, 并创建几个基本文件
 
-![git_clone_shell](https://raw.githubusercontent.com/ssthouse/d3-blog/master/use-github-page-efficiently/git_clone_shell.jpeg)
+![create_sample_files](https://raw.githubusercontent.com/ssthouse/d3-blog/master/use-github-page-efficiently/create_sample_files.png)
 
 #### 然后我们加点基本的静态网站代码
 - 代码
