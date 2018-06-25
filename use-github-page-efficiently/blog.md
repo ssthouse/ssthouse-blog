@@ -124,11 +124,107 @@ window.onload = function() {
 
 #### 创建项目
 
-首先我们用 vue-cli 创建一个标准的 webpack 管理的 vue 项目 ([点我安装 vue-cli](https://cli.vuejs.org/guide/creating-a-project.html#installation)), 
+首先我们用 vue-cli 创建一个 webpack 管理的 vue 项目 ([点我安装 vue-cli](https://github.com/vuejs-templates/webpack)),
+
+```shell
+vue init webpack github-page-vue-demo
+```
+
+然后我们进入项目, 看看目录结构:
+
+![simplest demo](https://raw.githubusercontent.com/ssthouse/d3-blog/master/use-github-page-efficiently/vue_demo_file_tree.png)
+
+可以看到 config 目录中有三个文件:
+
+```shell
+config                     // webpack 配置目录
+├── dev.env.js             // 用于development模式的环境变量
+├── index.js               // 用于配置 `dev` 模式和 `prod` 模式的 webpack config 文件
+└── prod.env.js            // 用于product模式的环境变量
+```
+
+这里我们需要配置的就是 **index.js** 文件, 先看看该文件内容 (这里将不相关的代码用...略过), 其中我们需要关注的是 _module.exports_ 的 _build_ 属性, 我们将在这里配置 _webpack build_ 时生成文件的路径
+
+```javascript
+module.exports = {
+  dev: {
+      ...
+  },
+
+  build: {
+    // Template for index.html
+    index: path.resolve(__dirname, '../dist/index.html'),
+
+    // Paths
+    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsSubDirectory: 'static',
+    assetsPublicPath: '/',
+    ...
+  }
+}
+```
+
+可以看到图中主要配置了 _index_ 文件和 _assets_ 文件的路径. 默认执行 `yarn run build` 后 webpack 会将项目打包到项目根目录的 ./dist 文件夹, 如图:
+
+![default build result](https://raw.githubusercontent.com/ssthouse/d3-blog/master/use-github-page-efficiently/vue_default_build_result.png)
 
 #### 修改编译配置
 
-默认配置会build到 dist文件夹.
-如果我们想让github pages识别到我们的网页文件, 我们我们可以手动把 dist中的文件手动拷贝到
+但是 github pages 默认只能识别项目根目录的 index 文件, 如果我们想要让 github pages 识别到我们 build 出来的文件应该怎么办呢?
+
+你可能会想到直接将 dist 文件夹中 build 生成的文件直接复制到项目的根目录, 这确实是个办法. 但是这样的话, 我们每次 build 完, 都需要手动复制一边文件, 无疑增加了很多重复性的工作.
+
+我们可以通过修改默认的配置来达到项目 build 的文件直接生成到项目根目录的目的, 像这样:
+
+```javascript
+module.exports = {
+  dev: {
+      ...
+  },
+
+  build: {
+    // Template for index.html
+    index: path.resolve(__dirname, '../index.html'),  //之前是 '../dist/index.html'
+
+    // Paths
+    assetsRoot: path.resolve(__dirname, '../'),  // 之前是 '../dist'
+    assetsSubDirectory: 'static',
+    assetsPublicPath: './',    // 之前是 '/'
+    ...
+  }
+}
+```
+
+改动就是去掉了默认的 _dist_ 目录, 并且将 _assets_ 的引用路径从 _绝对路径_ 改为了 _相对路径_. 去掉 _dist_ 目录是为了将 _build_ 的 _target_ 路径改为项目根目录. 改为相对路径是应为在部署到 _github pages_ 的时候, 我们的域名是 `https://username.github.io/repositoryName`, 也就是说我们的项目是部署在子域名上的, 如果用绝对路径会导致 _assets_ 文件 404.
+
+这样修改玩之后我们又发现一个问题, 这样 build 结束生成的 index.html 文件会覆盖原有的 template index.html 文件, 并且根目录多了一个 static 文件夹, 很容易让人对这个文件夹的作用产生疑惑. 有没有更好的解决办法呢?
+
+让我们回到 github page 的 setting 页面:
+![default build result](https://raw.githubusercontent.com/ssthouse/d3-blog/master/use-github-page-efficiently/github_page_setting_use_docs.png)
+
+可以看到这里有个选项是 `master branch /docs folder`, 当前状态是不可选的, 原因是我们的项目代码里面没有 `/docs` 目录. 这个选项的意思是 github page 可以识别我们项目中的 docs 文件夹, 并在这个文件夹中寻找 index 文件进行部署. 选中这个选项后, 我们只需要将之前 webpack 默认的 _dist_ 文件夹改为 _docs_ 文件夹即可, 修改后配置如下:
+
+```javascript
+module.exports = {
+  dev: {
+      ...
+  },
+
+  build: {
+    // Template for index.html
+    index: path.resolve(__dirname, '../docs/index.html'),  //之前是'../dist/index.html'
+
+    // Paths
+    assetsRoot: path.resolve(__dirname, '../docs'),  // 之前是 '../dist'
+    assetsSubDirectory: 'static',
+    assetsPublicPath: './',    // 之前是 '/'
+    ...
+  }
+}
+```
+
+完成以上的修改后, 我们再运行 `yarn run build`, 你会发现根目录下多了一个 *docs* 文件夹, 里面承载了 *index* 文件和 *static* 文件夹*. docs* 目录以及其下的文件全部加入 git 版本管理, 并 push 到 github.
+
+再次来到 该项目的 *github page setting* 页面, 这时 *master branch /docs folder* 就变成可选中的了. 我们选中这个选项, 保存设置. 过两分钟左右, 我们再次访问我们项目的 *github page url*, 就会发现项目已经部署成功了 :tada:
 
 ### 三. 只可以是静态网站吗?
