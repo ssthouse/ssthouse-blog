@@ -8,19 +8,18 @@
 
 ## 译文
 
-在前一篇文章中, 我介绍了关于 D3 selection 的基础, 这些基础能让你开始着手使用 D3 selection.
+在前一篇文章中, 我介绍了关于 D3 selection 的基础, 这些基础足以让你开始使用 D3 selection.
 
-在这篇文章中, 我将介绍 d3-selection 的实现原理. 本文可能需要更长的时间来阅读, 但它能揭开 selection 的原理 并让你能真正掌握数据驱动文本(D3)
+在这篇文章中, 我将介绍 d3-selection 的实现原理. 本文可能需要更长的时间来阅读, 但它能揭开 selection 的原理 并让你能真正掌握数据驱动文本的思想(D3的思想)
 
-本文初看可能会显得结构组织比较随意. 文章会介绍 selection 内部的工作原理而不是 selection 的设计动机, 所以你可能会对为什么使用 selection 这种模式感到疑惑.
-这只是因为先讲解每一个片段,再讲解如何将这些片段串联起来使用会更容易理解.
-等你读到本文结尾时, 自然会明白 selection 如此设计的原因.
+本文会介绍 selection 内部的工作原理而不是 selection 的设计动机, 所以你刚开始可能会对为什么使用 selection 这种模式感到疑惑.
+但等你读到本文结尾时, 你自然会明白 selection 如此设计的原因.
 
-D3 是一个 用于可视化的库, 所以本文用图像的方式, 结合着文字进行讲解.
+D3 是一个 用于可视化的库, 所以本文也用可视化的方式, 结合着文字对selection原理进行讲解.
 
 ![data join](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/data_join.png)
 
-圆角矩形, 比如 `thing` 表示 JavsScript 的各种对象, 从 object ({foo:16}) 到 基础数据类型 ("hello"), 数组 ([1,2,3]) 再到 DOM 元素. 不同种类的对象会用不同的颜色来区分.
+圆角矩形, 比如 `thing` 表示 JavsScript 的各种对象, 从 object ({foo:16}) 到 基础数据类型 ("hello"), 到数组 ([1,2,3]) 再到 DOM 元素. 不同种类的对象会用不同的颜色来区分.
 对象之间的关系会用灰色的线来表示, 比如一个包含数字 42 的数组会表示成这样:
 
 ```javascript
@@ -29,7 +28,7 @@ var array = [42]
 
 ![sample pic](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/1.png)
 
-大部分情况下, 图像对应的代码会出现在图片的上方. 你可以访问这个网站, 并打开调试窗口对文中的代码进行试验, 这样能助你更好的理解本文.
+大部分情况下, 图像对应的代码会出现在图片的上方. 你可以访问[这个网站](https://bost.ocks.org/mike/selection/), 并打开调试窗口对文中的代码进行试验, 这样能帮助你更好的理解本文.
 
 现在, 让我们开始!
 
