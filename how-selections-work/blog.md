@@ -1,4 +1,4 @@
-# [译]D3.js 之 d3-selection 原理 (How Selections Works)
+# [译]D3.js 之 d3-selection 原理
 
 ## 译者注
 
@@ -73,6 +73,127 @@ d3.selectAll('tr')
   .selectAll('span')
 ```
 
-![many groups with spans](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/5.png)
+![many groups with spans](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/5.gif)
 
-每一个 group都有一个 parentNode属性, 这个属性存储了group中所有元素的父节点.
+每一个 group 都有一个 parentNode 属性, 这个属性存储了 group 中所有元素的父节点.　父节点属性会在 group 被创建时就被赋值. 因此, 如果你调用 `d3.selectAll("tr")​.selectAll("td")` , 返回的 group 数组, 他们的父节点就是 tr. 而 `d3.select` 和 `d3.selectAll` 返回的 group, 他们的父节点就是 html.
+
+通常来说, 你完全不用在意 selection 是由 group 组成的这个事实. 当你对 selection 调用 `selection.attr` 或者 `selection.style` 的时候, selection 中的所有 group 的所有子元素都会被调用. 而 group 存在的唯一影响是: 你在 `selection.attr('attrName', function(data, i))`时, 传递的 function(data, i) 中, 第二个参数 i 是元素在 group 中的索引而不是在整个 selection 中的索引.
+
+### select 为何不涉及 group
+
+只有 `selectAll` 会涉及到 group 元素, `select` 会保留当前已有的 group. select 方法之所以不同是因为在老的 selection 中的每个元素都只会在新的 selection 中对应一个新的元素. 因此 select 操作也会直接把数据从父元素传递给子元素 (因此也根本没有 data-join 的过程)
+
+为了方便使用, `_append_ 方法和 _insert_ 方法都被挂载在了 selection 上, 这两个方法都会自动维持 group 结构, 并且自动传递数据. 比如我们现在有一个有四个 section 节点的页面:
+
+```javascript
+d3.selectAll('section')
+```
+
+![many groups with nodes](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/6.png)
+
+如果你调用下面的方法, 为每一个 section 添加一个 p 元素, 你会得到一个有四个 p 元素的 group:
+
+```javascript
+d3.selectAll('section').append('p')
+```
+
+![many groups with spans](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/7.png)
+
+需要注意的是, 现在这个 selection 的父节点仍然是 html, 因为 selection.selectAll 还没有被被调用来, 所以父节点还没有发生变化.
+
+### 空元素
+
+group 中可以保存 Null 元素, 用来声明元素的缺失. Null 会被大部分的操作所忽略, 比如: D3 会在 `selection.attr` 和 `selection.style` 的时候自动忽略 Null 元素.
+
+Null 元素会在 selection.select 无法找到符合要求的子元素时被创建. 因为 select 方法会维持 group 的结构, 所以它会在缺失元素的地方填上 Null. 比如下面这个例子, 四个 section 中只有两个有 aside 元素:
+
+```javascript
+d3.selectAll('section').select('aside')
+```
+
+![4 selectio , 2 of which has aside](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/8.png)
+
+虽然在大部分情况下, 你完全可以忽略 group 中的 Null 元素, 但是记住 Null 元素是确实存在于 group 的结构当中的, 并且他们会在计算索引时被考虑进来.
+
+### 绑定数据
+
+data 并不是 selection 的一个属性, 这一点可能会让你感到很惊讶, 但确实是这样. data 并不是 selection 的一个属性, 而是被保存为 DOM 元素的一个属性.
+这就意味着, 当你使用 selection.data 绑定数据时, 其实数据是被绑定到了 DOM 元素上. data 会被赋值给 DOM 元素的 `__data__` 属性. 如果一个 DOM 元素没有 `__data__` 属性, 就表明它没有被绑定数据. 所以 selection 是临时性的, 但数据是被持久化在 DOM 里的, 你可以从新创建 selection, 而你的 selection 中的 DOM 元素仍会保有它之前被绑定的数据.
+
+数据的绑定可以通过一下几种方式实现, 接下来我们会分别讲解这三种绑定方式:
+
+- 给每一个单独的 DOM 元素调用 `selection.datum`
+- 从父节点中继承来数据, 比如: append, insert, select
+- 调用 `selection.data`
+
+> 给每一个单独的 DOM 元素调用 `selection.datum`
+
+因为有 selection.datum 方法的存在, 你不需要手动的去给 `__data__` 属性赋值, 虽然 selection.datum 就是这个实现的:
+
+```javascript
+document.body.__data__ = 42
+```
+
+![body with data 42](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/9.png)
+
+使用 D3 的方式来达到同样的效果:
+
+```javascript
+d3.select('body').datum(42)
+```
+
+> 从父节点中继承来数据, 比如: append, insert, select
+
+![body with data 42 in D3 way](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/10.png)
+
+如果我们现在向 body 中 插入一个 _h1_ 元素, _h1_ 元素就会自动继承 body 的数据:
+
+```javascript
+d3.select('body')
+  .datum(42)
+  .append('h1')
+```
+
+![h1 get data from body](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/11.png)
+
+> 调用 `selection.data`
+
+最后我们来看 `selection.data`, 讲解这个方法会引入 d3 中非常重要的 `data-join` 思想. 但在我们讲解这个思想之前, 我们需要首先回答一个更加基本的问题: 什么是数据 ?
+
+### 什么是数据?
+
+在 D3 中, 数据可以是装有基础数据类型数据的数组, 比如下面这个:
+
+```javascript
+var numbers = [4, 5, 18, 23, 42]
+```
+
+或者是对象数组:
+
+```javascript
+var letters = [
+  { name: 'A', frequency: 0.08167 },
+  { name: 'B', frequency: 0.01492 },
+  { name: 'C', frequency: 0.0278 },
+  { name: 'D', frequency: 0.04253 },
+  { name: 'E', frequency: 0.12702 }
+]
+```
+
+甚至是矩阵(由数组组成的数组):
+
+```javascript
+var matrix = [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15]]
+```
+
+你可以通过 selection 来描述数据和可视化图形之间的关系. 下面我们来具体讲解. 我们先创建一个有 5 个数字的数组:
+
+![array with 5 number](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/12.png)
+
+就像 selection.style 可以接受一个普通的 string(例: "red")或者一个返回 string 的 function (例: unction(d) => d.color), selection.data 也可以接受这两种参数.
+
+然而, 和其他 selection 的方法不同, selection.data 是为每一个 group 定义了数据, 而不是为每一个 DOM 元素定义了数据: 对于 group 来说, 数据应该是一个数组或者是一个返回数组的 function. 因此, 一个有多个 group 的 selection 其对应的数据也应该是一个包含多个子数组的数组.
+
+![array with 5 number](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/13.png)
+
+上图中, 蓝色的线条表示data() 方法返回的是一个二维数组. 
