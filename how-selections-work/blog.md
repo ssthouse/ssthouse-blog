@@ -196,4 +196,140 @@ var matrix = [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15]]
 
 ![array with 5 number](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/13.png)
 
-上图中, 蓝色的线条表示data() 方法返回的是一个二维数组. 
+上图中, 蓝色的线条表示 data() 方法返回的是一个二维数组. 你传入 selection.data() 的方法会有两个参数: parentNode 和 groupIndex. 然后我们根据这两个参数, 返回对应的数据. 因此,这里传入的方法相当与是持有父级的数据, 然后根据 parentNode 和 groupIndex 将父级数据拆分为每个 group 的子级数据.
+
+```javascript
+selection.data(function(parentNode, groupIndex) {
+  return data[groupIndex]
+})
+```
+
+对于只有一个 group 的 selection, 你可以直接传入 group 对应的数组数据即可. 只有当你遇到需要处理多个 group 的情况时, 你才需要一个 function 来为不同的 group 返回对应的数组数据.
+
+### data-join 的思想
+
+现在, 我们终于可以开始讨论 d3-selection 的核心思想了. 为了绑定 data 到 DOM 元素, 我们必须知道哪一个数据是对应的哪一个 DOM 元素. 而这是通过比较 key 值来实现的. 一个 key 其实就是一个简单的字符串, 就比如一个名字.当一个数据和一个 DOM 节点的 key 值相同时, 我们就认为这个数据和这个 DOM 元素是绑定的.
+
+最简单的指定 key 值的方法是使用索引: 地一个数据和第一个 DOM 元素会被赋予 key 值 "0", 第二个会被赋予 "1", 以此类推. 将一个数字数组和一个 key 值匹配的 DOM 元素数组进行 join 操作, 效果就像下面图示的样子:
+
+![maching data array and dom array](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/14.png)
+
+下面的代码得到的绑定好数据的 selection:
+
+```javascript
+d3.selectAll('div').data(numbers)
+```
+
+![maching data array and dom array](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/15.png)
+
+如果你的数据和 DOM 元素的顺序且好相同(或者对顺序并不在意)时, 通过下标索引作为 key 值是非常方便的. 但是, 一旦数据的顺序发生变化, 通过下表索引作为 key 就变得不可行了. 这时, 你需要手动设置一个 key functon, 将这个 function 作为第二个参数传入 selection.data(data, keyFunction). 这个 keyFunction 需要根据当前的数据, 返回一个对应的 key 值. 比如, 你有一个对象数组作为数据. 每个数据有一个 name 属性, 你的 key function 就可以返回数据的 name 属性, 就像这样:
+
+```javascript
+var letters = [
+  { name: 'A', frequency: 0.08167 },
+  { name: 'B', frequency: 0.01492 },
+  { name: 'C', frequency: 0.0278 },
+  { name: 'D', frequency: 0.04253 },
+  { name: 'E', frequency: 0.12702 }
+]
+
+function name(d) {
+  return d.name
+}
+```
+
+![maching data array and dom array](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/16.png)
+
+同样的, 现在 DOM 元素和数据完成了绑定.
+
+```javascript
+d3.selectAll('div').data(letters, name)
+```
+
+![maching data array and dom array](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/17.png)
+
+当有多个 group 时, 上面的情况会变得更加复杂. 但是不用担心, 应为每一个 group 会独立的进行 join 操作. 因此, 你只需要关心如何在一个 group 中保持 key 值的唯一性.
+
+![maching data array and dom array](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/18.png)
+
+上面的例子假设数据和 DOM 元素的数量是恰好 1:1. 那么当 DOM 元素和数据的数量不相同时呢? 比如有一个 DOM 没有对应 key 的数据, 或者有一个数据没有对应 key 的 DOM 元素?
+
+### 进入, 刷新, 离开 (Enter, Update, Exit)
+
+当我们用 key 值来匹配 DOM 元素和数据时, 有三种可能的情况会出现:
+
+- Update - 对于某一个数据, 有相同 key 值的 DOM 元素想对应
+- Enter - 对于某一个数据, 没有相同 key 至的 DOM 元素相对应
+- Exit - 对于某一个 DOM 元素, 没有相同 key 值的数据相对应
+
+想对应的, selection 也会返回三种状态对应的选择集: selection.data, selection.enter, selection.exit. 假设我们现在有一个柱状图, 柱状图有 5 列, 分别对应的 ABCDE 这五个字母. 现在你想将柱状图对应的数据从 ABCDE 切换成 YEAOI. 你可以通过设置一个 key function 来为此这五个字母和五列柱状图之间的关系, 数据转换的过程如图: ABCDE ==> YEAOI
+
+![maching data array and dom array](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/19.png)
+
+其中 A 和 E 是一直都存在的. 所以他们被划入了 Update 选择集, 并且顺序会切换为新数据集的顺序, 如图:
+
+```javascript
+var div = d3.selectAll('div').data(vowels, name)
+```
+
+![abcde to yeaoi](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/20.gif)
+
+剩下的 B, C, D 因为在新的数据(YEAOI)中没有对应的数据, 所以被划入了 exit 选择集. 注意, exit 选择集中数据的顺序保持原有数据集中的顺序, 这个顺序会在我们需要加入移除动画时很有帮助.
+
+```javascript
+div.exit()
+```
+
+![maching data array and dom array](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/22.gif)
+
+最后, 新加入的三个字母: Y, O, I 因为没有对应的 DOM 元素, 所以被划分到了 Enter 集合:
+
+```javascript
+div.enter()
+```
+
+![maching data array and dom array](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/23.gif)
+
+在这三种状态的选择集中, Update 和 Exit 都是常规的选择集, 他们的实现也就是 selection 的子类. 而 Enter 不同, 因为 enter 选择集中的 DOM 元素在 Enter 选择集创建时还并不存在. Enter 选择集包含的是 DOM 元素的占位符而不是真正的 DOM 元素. 这个占位符也并没有什么特别的地方, 他们就是一个有 `__data__` 属性的 普通对象而已. 当对 enter 集合调用 selection.append 方法时, d3 会进行特殊的处理, 让新插入的元素插入到 group 的父节点中去, 并且用新插入的元素取代占位符.
+
+这也就是为什么我们需要先调用 selection.selectAll 再调用 selection.data: 因为我们要为 enter 选择集的 group 指定好用于插入新元素的父节点.
+
+### 同时操作 Enter & Update 选择集
+
+#### 注: 此处作者的描述针对的是老版本 api, 本文在此使用新版本 api 进行讲解, 会和原文内容有所不同
+
+通常我们使用 D3 都会分别的处理:
+
+- Enter 选择集 ==> 创建新 DOM 元素, 为新元素跟新属性和样式
+- Update 选择集 ==> 跟新属性和样式
+- Exit 选择集 ==> 移除 DOM 元素
+
+但是, 对于 Enter 选择集和 Update 选择集的操作, 经常会有重复的部分, 比如更新 DOM 元素的坐标, 更新 DOM 元素的 style 样式.
+
+为了减少这部分冗余的代码, selection 提供了 merge 方法, 使用方法如下:
+
+```javascript
+var updateSelection = div
+div
+  .enter()
+  .append('text')
+  .text(d => d)
+  .merge(updateSelection)
+  .attr('x', function(d, i) {
+    return i * 10
+  })
+  .attr('y', 10)
+```
+
+之所以 Enter 选择集和 Update 选择集可以 merge 是因为, div.enter().append('text')后, enter 中的占位符已经被真实的 DOM 元素取代, 因而可以和 Update 选择集合并进行操作.
+
+### 致谢
+
+感谢: Anna Powell-Smith, Scott Murray, Nelson Minar, Tom Carden, Shan Carter, Jason Davies, Tom MacWright, John Firebaugh. 感谢你们的审阅和建议帮助本文变的更好.
+
+### 进一步阅读
+
+如果想进一步的学习 d3-selection, 阅读源代码是一个不错的方式. 这里也列出有一些其他人的演讲或教程, 方便进一步阅读:
+
+- [Scott Murray 的 Binding Data](http://alignedleft.com/tutorials/d3/binding-data/)
+- [Tom MacWright 的 A Fun, Difficult Introduction to D3](http://macwright.org/presentations/dcjq/)
