@@ -34,7 +34,7 @@ var array = [42]
 
 ### Array 的子类
 
-可能有人和你说过: selection 就是 DOM 元素组成的数组. 但其实并不是的, selection 是 array 的子类,这个子类提供了一些操作选中的元素的方法 (比如设置属性, 设置样式). selection 同样继承了 array 的一些方法, 比如 array.forEach, array.map. 然而, 你并不会经常使用这些 array 继承来的方法, 因为 D3 提供了一些方便的替代方法(比如 selection.each). 并且, 有一些 array 的方法为了符合 selection 的逻辑而被 overridden, 比如 selection.filter 和 selection.sort.
+可能有人和你说过: selection 就是 DOM 元素组成的数组. 但事实并不是这样, selection 是 array 的子类,这个子类提供了一些操作选中元素的方法 (比如设置属性: selection.attr, 设置样式: `selection:style`). selection 同样继承了 array 的一些方法, 比如 `array.forEach`, `array.map`. 然而, 你并不会经常使用这些从 array 继承来的方法, 因为 D3 提供了一些方便的替代方法(比如 `selection.each`). 并且, 有一些 array 的方法为了符合 selection 的逻辑而被 _overridden_, 比如 `selection.filter` 和 `selection.sort`.
 
 ### Group 元素
 
@@ -46,9 +46,9 @@ var selection = d3.select('body')
 
 ![single group with body](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/2.png)
 
-在 [JavaScript 控制台](https://bost.ocks.org/mike/selection/), 尝试运行下面的命令并查看 selection[0] ==> group 和 元素 selectio[0][0]. 虽然 D3 支持这种通过数组下标访问元素的方式, 但是你很快就会意识到用 selection.node 会更好.
+在 [JavaScript 控制台](https://bost.ocks.org/mike/selection/), 尝试运行下面的命令并查看 selection[0] ==> group 和 元素 `selectio[0][0]`. 虽然 D3 支持这种通过数组下标访问元素的方式, 但是你很快就会意识到用 `selection.node` 会更好.
 
-相似的, d3.selectAll 也会返回一个 group, 这个 group 中会有若干个元素:
+相似的, _d3.selectAll_ 也会返回一个 group, 这个 group 中会有若干个元素:
 
 ```javascript
 d3.selectAll('h2')
@@ -56,7 +56,7 @@ d3.selectAll('h2')
 
 ![single group with many h2](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/3.png)
 
-d3.select 和 d3.selectAll 都是返回的一个 group. 唯一获得包含多个 group 的 selection 的方法是 `selection.selectAll`. 比如, 如果你选中所有的 table row, 接着再选中这些 row 的 cell:
+_d3.select_ 和 _d3.selectAll_ 都是返回的一个 group. 唯一获得包含多个 group 的 selection 的方法是 `selection.selectAll`. 比如, 如果你选中所有的 table row, 接着再选中这些 row 的 cell:
 
 ```javascript
 d3.selectAll('tr').selectAll('td')
@@ -74,15 +74,15 @@ d3.selectAll('tr')
 
 ![many groups with spans](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/5.gif)
 
-每一个 group 都有一个 parentNode 属性, 这个属性存储了 group 中所有元素的父节点.　父节点属性会在 group 被创建时就被赋值. 因此, 如果你调用 `d3.selectAll("tr")​.selectAll("td")` , 返回的 group 数组, 他们的父节点就是 tr. 而 `d3.select` 和 `d3.selectAll` 返回的 group, 他们的父节点就是 html.
+每一个 group 都有一个 _parentNode_ 属性, 这个属性存储了 group 中所有元素的父节点.　父节点属性会在 group 被创建时就被赋值. 因此, 如果你调用 `d3.selectAll("tr").selectAll("td")` , 返回的 group 数组, 他们的父节点就是 _tr_. 而 _d3.select_ 和 _d3.selectAll_ 返回的 group, 他们的父节点就是 _html_.
 
-通常来说, 你完全不用在意 selection 是由 group 组成的这个事实. 当你对 selection 调用 `selection.attr` 或者 `selection.style` 的时候, selection 中的所有 group 的所有子元素都会被调用. 而 group 存在的唯一影响是: 你在 `selection.attr('attrName', function(data, i))`时, 传递的 function(data, i) 中, 第二个参数 i 是元素在 group 中的索引而不是在整个 selection 中的索引.
+通常来说, 你完全不用在意 selection 是由 group 组成的这个事实. 当你对 selection 调用 _selection.attr_ 或者 _selection.style_ 的时候, selection 中的所有 group 的所有子元素都会被调用. 而 group 存在的唯一影响是: 你在 `selection.attr('attrName', function(data, i))`时, 传递的 _function(data, i)_ 中, 第二个参数 _i_ 是元素在 group 中的索引而不是在整个 selection 中的索引.
 
 ### select 为何不涉及 group
 
-只有 `selectAll` 会涉及到 group 元素, `select` 会保留当前已有的 group. select 方法之所以不同是因为在老的 selection 中的每个元素都只会在新的 selection 中对应一个新的元素. 因此 select 操作也会直接把数据从父元素传递给子元素 (因此也根本没有 data-join 的过程)
+只有 `selectAll` 会涉及到 group 元素, `select` 会保留当前已有的 group. select 方法之所以不同, 是因为在老的 selection 中的每个元素都只会在新的 selection 中对应一个新的元素. 因此 select 操作会直接把数据从父元素传递给子元素 (因此也根本没有 data-join 的过程)
 
-为了方便使用, `_append_ 方法和 _insert_ 方法都被挂载在了 selection 上, 这两个方法都会自动维持 group 结构, 并且自动传递数据. 比如我们现在有一个有四个 section 节点的页面:
+为了方便使用, _append_ 方法和 _insert_ 方法都被挂载到了 selection 上, 这两个方法都会自动维护 group 的结构, 并且自动传递数据. 比如我们现在有一个有四个 section 节点的页面:
 
 ```javascript
 d3.selectAll('section')
@@ -90,7 +90,7 @@ d3.selectAll('section')
 
 ![many groups with nodes](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/6.png)
 
-如果你调用下面的方法, 为每一个 section 添加一个 p 元素, 你会得到一个有四个 p 元素的 group:
+如果你调用下面的方法, 会为每一个 section 添加一个 p 元素, 你会得到一个有四个 p 元素的 group:
 
 ```javascript
 d3.selectAll('section').append('p')
@@ -98,13 +98,13 @@ d3.selectAll('section').append('p')
 
 ![many groups with spans](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/7.png)
 
-需要注意的是, 现在这个 selection 的父节点仍然是 html, 因为 selection.selectAll 还没有被被调用来, 所以父节点还没有发生变化.
+需要注意的是, 现在这个 selection 的父节点仍然是 html. 因为 _selection.selectAll_ 还没有被调用, 所以父节点还没有发生变化.
 
 ### 空元素
 
-group 中可以保存 Null 元素, 用来声明元素的缺失. Null 会被大部分的操作所忽略, 比如: D3 会在 `selection.attr` 和 `selection.style` 的时候自动忽略 Null 元素.
+group 中可以保存 **Null** 元素, 用来声明元素的缺失. **Null** 会被大部分的操作所忽略, 比如: D3 会在 `selection.attr` 和 `selection.style` 的时候自动忽略 **Null** 元素.
 
-Null 元素会在 selection.select 无法找到符合要求的子元素时被创建. 因为 select 方法会维持 group 的结构, 所以它会在缺失元素的地方填上 Null. 比如下面这个例子, 四个 section 中只有两个有 aside 元素:
+**Null** 元素会在 _selection.select_ 无法找到符合要求的子元素时被创建. 因为 select 方法会维护 group 的结构, 所以它会在缺失元素的地方填上 **Null**. 比如下面这个例子, 四个 section 中只有两个有 aside 元素:
 
 ```javascript
 d3.selectAll('section').select('aside')
@@ -112,22 +112,22 @@ d3.selectAll('section').select('aside')
 
 ![4 selectio , 2 of which has aside](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/8.png)
 
-虽然在大部分情况下, 你完全可以忽略 group 中的 Null 元素, 但是记住 Null 元素是确实存在于 group 的结构当中的, 并且他们会在计算索引时被考虑进来.
+虽然在大部分情况下, 你完全可以忽略 group 中的 **Null** 元素, 但是记住 **Null** 元素是确实存在于 group 的结构当中的, 并且他们会在计算 _index_ 时被考虑进来.
 
 ### 绑定数据
 
-data 并不是 selection 的一个属性, 这一点可能会让你感到很惊讶, 但确实是这样. data 并不是 selection 的一个属性, 而是被保存为 DOM 元素的一个属性.
-这就意味着, 当你使用 selection.data 绑定数据时, 其实数据是被绑定到了 DOM 元素上. data 会被赋值给 DOM 元素的 `__data__` 属性. 如果一个 DOM 元素没有 `__data__` 属性, 就表明它没有被绑定数据. 所以 selection 是临时性的, 但数据是被持久化在 DOM 里的, 你可以从新创建 selection, 而你的 selection 中的 DOM 元素仍会保有它之前被绑定的数据.
+data 并不是保存在 selection 中的一个属性, 这一点可能会让你感到惊讶, 但确实如此. data 并不是 selection 的一个属性, 而是被保存为 DOM 元素的一个属性.
+这就意味着, 当你使用 selection.data 绑定数据时, 其实数据是被绑定到了 DOM 元素上. data 会被赋值给 DOM 元素的 `__data__` 属性. 如果一个 DOM 元素没有 `__data__` 属性, 就表明它没有被绑定数据. 所以 selection 是临时性的, 但数据是被持久化在 DOM 里的, 你可以重新创建 selection, 而你的 selection 中的 DOM 元素仍会保有它之前被绑定的数据.
 
-数据的绑定可以通过一下几种方式实现, 接下来我们会分别讲解这三种绑定方式:
+数据的绑定可以通过以下几种方式实现, 接下来我们会分别讲解这三种方式:
 
 - 给每一个单独的 DOM 元素调用 `selection.datum`
-- 从父节点中继承来数据, 比如: append, insert, select
-- 调用 `selection.data`
+- 从父节点中继承来数据, 比如: _append_ , _insert_ , _select_
+- 调用 `selection.data()` 方法
 
-> 给每一个单独的 DOM 元素调用 `selection.datum`
+> 1. 给每一个单独的 DOM 元素调用 `selection.datum`
 
-因为有 selection.datum 方法的存在, 你不需要手动的去给 `__data__` 属性赋值, 虽然 selection.datum 就是这个实现的:
+因为有 selection.datum 方法的存在, 你不需要手动的去给 `__data__` 属性赋值, 虽然 selection.datum 就是这样实现的:
 
 ```javascript
 document.body.__data__ = 42
@@ -141,7 +141,7 @@ document.body.__data__ = 42
 d3.select('body').datum(42)
 ```
 
-> 从父节点中继承来数据, 比如: append, insert, select
+> 2. 从父节点中继承来数据, 比如: append, insert, select
 
 ![body with data 42 in D3 way](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/10.png)
 
@@ -155,7 +155,7 @@ d3.select('body')
 
 ![h1 get data from body](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/11.png)
 
-> 调用 `selection.data`
+> 3. 调用 `selection.data`
 
 最后我们来看 `selection.data`, 讲解这个方法会引入 d3 中非常重要的 `data-join` 思想. 但在我们讲解这个思想之前, 我们需要首先回答一个更加基本的问题: 什么是数据 ?
 
@@ -189,13 +189,13 @@ var matrix = [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15]]
 
 ![array with 5 number](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/12.png)
 
-就像 selection.style 可以接受一个普通的 string(例: "red")或者一个返回 string 的 function (例: unction(d) => d.color), selection.data 也可以接受这两种参数.
+就像 _selection.style_ 可以传入一个普通的 string(例: "red") 或者传入一个返回 string 的 function (例: `function(d) => d.color` ), _selection.data_ 也可以接受这两种参数.
 
-然而, 和其他 selection 的方法不同, selection.data 是为每一个 group 定义了数据, 而不是为每一个 DOM 元素定义了数据: 对于 group 来说, 数据应该是一个数组或者是一个返回数组的 function. 因此, 一个有多个 group 的 selection 其对应的数据也应该是一个包含多个子数组的数组.
+然而, 和其他 selection 的方法不同, selection.data 是为每一个 group 定义了数据, 而不是为每一个 DOM 元素定义数据: 对于 group 来说, 数据应该是一个数组或者是一个返回数组的 function. 因此, 一个有多个 group 的 selection 其对应的数据也应该是一个包含多个子数组的数组.
 
 ![array with 5 number](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/13.png)
 
-上图中, 蓝色的线条表示 data() 方法返回的是一个二维数组. 你传入 selection.data() 的方法会有两个参数: parentNode 和 groupIndex. 然后我们根据这两个参数, 返回对应的数据. 因此,这里传入的方法相当与是持有父级的数据, 然后根据 parentNode 和 groupIndex 将父级数据拆分为每个 group 的子级数据.
+上图中, 蓝色的线条表示 data() 方法返回的是一个二维数组. 你传入 selection.data() 的方法会有两个参数: **parentNode** 和 **groupIndex**. 然后我们根据这两个参数, 返回对应的数据. 因此,这里传入的方法相当于是持有父级的数据, 然后根据 **parentNode** 和 **groupIndex** 将父级数据拆分为每个 group 的子级数据.
 
 ```javascript
 selection.data(function(parentNode, groupIndex) {
