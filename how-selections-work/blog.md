@@ -336,3 +336,12 @@ div
 
 - [Scott Murray 的 Binding Data](http://alignedleft.com/tutorials/d3/binding-data/)
 - [Tom MacWright 的 A Fun, Difficult Introduction to D3](http://macwright.org/presentations/dcjq/)
+
+
+## 如果觉得不错的话, 不妨关注一下 : )
+
+[github主页](https://github.com/ssthouse)
+
+[知乎专栏](https://zhuanlan.zhihu.com/c_196857379)
+
+[掘金](https://juejin.im/user/57bc46c8efa631005a891573/posts)
