@@ -125,7 +125,7 @@ data 并不是保存在 selection 中的一个属性, 这一点可能会让你�
 - 从父节点中继承来数据, 比如: _append_ , _insert_ , _select_
 - 调用 _selection.data()_ 方法
 
-> 1. 给每一个单独的 DOM 元素调用 `selection.datum`
+> 给每一个单独的 DOM 元素调用 `selection.datum`
 
 因为有 _selection.datum_ 方法的存在, 你不需要手动的去给 `__data__` 属性赋值, 虽然 _selection.datum_ 内部就是这样实现的:
 
@@ -141,7 +141,7 @@ document.body.__data__ = 42
 d3.select('body').datum(42)
 ```
 
-> 2. 从父节点中继承来数据, 比如: _append_, _insert_, _select_
+> 从父节点中继承来数据, 比如: _append_, _insert_, _select_
 
 ![body with data 42 in D3 way](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/10.png)
 
@@ -155,7 +155,7 @@ d3.select('body')
 
 ![h1 get data from body](https://github.com/ssthouse/d3-blog/raw/master/how-selections-work/img/11.png)
 
-> 3. 调用 _selection.data_
+> 调用 _selection.data_
 
 最后我们来看 _selection.data_ , 讲解这个方法会引入 d3 中非常重要的 *data-join* 思想. 但在我们讲解这个思想之前, 我们需要首先回答一个更加基本的问题: 什么是数据 ?
 
