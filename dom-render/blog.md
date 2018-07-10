@@ -8,6 +8,24 @@
 
 ## 效果
 
-这个网页展示了一个简单的HTML页面的DOM渲染过程, 用户可以点击前进,后退按钮, 页面左侧会显示出当前的HTML代码, 右侧则会显示出实时的DOM元素的树状结构:
+这个网页展示了一个简单的 HTML 页面的 DOM 渲染过程, 用户可以点击前进,后退按钮, 页面左侧会显示出当前的 HTML 代码, 右侧则会显示出实时的 DOM 元素的树状结构:
 
 ### 点击 前进, 后退按钮
+
+![forward and backword](https://raw.githubusercontent.com/ssthouse/d3-blog/master/dom-render/img/forward_and_backword.gif)
+
+### 自动播放
+
+![auto play](https://raw.githubusercontent.com/ssthouse/d3-blog/master/dom-render/img/autoplay.gif)
+
+## DOM 渲染过程
+
+DOM 渲染过程其实非常简单, 当浏览器拿到 HTML 文件时, 按照从上往下的顺序依次渲染. 在渲染过程中可能会遇到以下几种情况:
+
+- 遇到普通的 DOM 元素标签 ==> 创建 DOM 元素
+- 遇到 `<head>` 或 `<style>` 标签, 正常解析, 不创建 DOM 元素
+- 遇到 `<script>` 标签, 执行 script 标签中代码, 这一步中的 JS 代码可以访问在该`<script>` 标签之前创建好的 DOM 元素, 并且可以动态的向起添加或删除 DOM 元素
+
+下面用可视化讲解中的步骤依次讲解:
+
+####
