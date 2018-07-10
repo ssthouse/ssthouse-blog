@@ -2,13 +2,17 @@
 
 ## 前言
 
-最近在看 *Secrets of the JavaScript Ninja*, 书中第二章讲到 DOM 的构建流程. 
+最近在看 _Secrets of the JavaScript Ninja_, 书中第二章讲到 DOM 的构建流程.
 
 记得我之前也为理解 DOM 构建流程查阅过数次资料, 虽然每次查阅完都觉得 DOM 构建流程很简单, 看完便懂, 但是懂了又忘还是让人有些头疼.
 
 为了给自己加深印象, 也为了为大家提供一个可视化的理解 DOM 构建过程的方式, 笔者制作了一个简单的网页来动态演示 DOM 构建过程. 希望能给大家带来一些帮助.
 
 ## 效果
+
+### 在线查看
+
+[在线 demo (请使用 pc 访问)](https://ssthouse.github.io/visual-explain/#/list/domRender)
 
 ### 前进, 后退
 
@@ -128,10 +132,31 @@
 
 这段代码的逻辑是: 向 **id** 为 **list** 的 DOM 节点添加一个 **li** 作为子元素, 故执行完成后 DOM 树会是这样:
 
-![step 7](https://raw.githubusercontent.com/ssthouse/d3-blog/master/dom-render/img/step8.png)
+![step 7](https://raw.githubusercontent.com/ssthouse/d3-blog/master/dom-render/img/step7.png)
 
 最后, 浏览器会解析到 `<body/></html>` 等标签, 结束解析过程. 最终我们得到的 DOM 结构如图:
 
 ![step 9](https://raw.githubusercontent.com/ssthouse/d3-blog/master/dom-render/img/step9.png)
 
-####
+## 后记
+
+预计我会将 _Secrets of the JavaScript Ninja_ 后续章节中的一些知识点也通过类似的方式进行可视化. 
+
+如果你也有希望能做成**可视化讲解**的: **知识点**, **算法**, **技术原理**, 欢迎在下面留言与我交流, 期待大家的反馈 :)
+
+演示页面用到的技术为: Vue, D3.js, 欢迎 fork & star
+[Github 地址](https://github.com/ssthouse/visual-explain)
+
+## 想继续了解 D3.js
+
+这里是我的 _D3.js_ 、 _数据可视化_ 相关博客的 github 地址, 欢迎 fork & star :tada:
+
+[D3-blog](https://github.com/ssthouse/d3-blog)
+
+## 如果觉得不错的话, 不妨点击下面的链接关注一下 : )
+
+[github 主页](https://github.com/ssthouse)
+
+[知乎专栏](https://zhuanlan.zhihu.com/c_196857379)
+
+[掘金](https://juejin.im/user/57bc46c8efa631005a891573/posts)
