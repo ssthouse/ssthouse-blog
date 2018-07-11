@@ -28,6 +28,8 @@
 
 [[译] D3.js 之 d3-shap 简介](https://github.com/ssthouse/d3-blog/blob/master/d3-shape-intro/blog.md)
 
-### 数据可视化 Tips
+### 数据可视化 实践
 
 [使用 github pages, 快速部署你的静态网页](https://github.com/ssthouse/d3-blog/blob/master/use-github-page-efficiently/blog.md)
+
+[可视化讲解 DOM 构建过程](https://github.com/ssthouse/d3-blog/blob/master/dom-render/blog.md)  ==> [在线demo](https://ssthouse.github.io/visual-explain/#/list/domRender)
