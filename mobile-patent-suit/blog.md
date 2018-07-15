@@ -142,6 +142,8 @@
 
 
 
+#### 画出代表公司的 *圆形节点*
+
 处理好了数据, 让我们将其映射到页面上的 **svg** ==> **circle** 元素:
 
 ```javascript
@@ -168,5 +170,204 @@ this.circle = this.svgNode           // svgNode 为页面中的 svg节点 (d3.se
 
 执行以上代码后的效果:
 
+![circles](https://raw.githubusercontent.com/ssthouse/d3-blog/master/mobile-patent-suit/img/circles.png)
 
 
+
+#### 画出公司名称
+
+画出代表公司的圆形节点后, 再画出公司名称就很简单了. 只需要将 x, y 坐标进行一定偏移即可. 
+
+这里我们将公司名称放在圆形节点的右方:
+
+```javascript
+    this.text = this.svgNode
+      .append('g')
+      .selectAll('text')
+      .data(this.d3.values(this.nodes))
+      .enter()
+      .append('text')
+      .attr('x', 12)
+      .attr('y', '.31em')
+      .text(d => d.name)
+```
+
+上面的代码只是将 text 元素放置在了 (12 , 0 ) 的位置,  我们在 d3-force 的每一个 tick周期中, 对其text进行位置的偏移, 这样就达到了text元素在 circle元素右侧 12个像素的效果:
+
+```javascript
+this.force = this.d3
+      ...
+      .on('tick', () => {
+        if (this.path) {
+          this.path.attr('d', this.linkArc)
+          this.circle.attr('transform', transform)
+          this.text.attr('transform', transform)
+        }
+      })
+```
+
+效果如图:
+
+![circles](https://raw.githubusercontent.com/ssthouse/d3-blog/master/mobile-patent-suit/img/circles_texts.png)
+
+
+
+#### 画出诉讼关系连线
+
+接下来我们将有诉讼关系的节点连接起来. 因为连线不是规则的图形, 所以我们使用 svg 的 path 元素来实现.
+
+
+
+```javascript
+    this.path = this.svgNode
+      .append('g')
+      .selectAll('path')
+      .data(this.links)
+      .enter()
+      .append('path')
+      .attr('class', function(d) {
+        return 'link ' + d.type
+      })
+      .attr('marker-end', function(d) {
+        return 'url(#' + d.type + ')'
+      })
+```
+
+我们使用 `'link ' + d.type` 为不同的诉讼关系连线赋予不同的 class,  然后通过css对不同class的连线添加不同的样式(红色实线, 蓝色虚线, 绿色实线).
+
+
+
+path的d属性我们同样在 d3-force的tick周期中设置:
+
+```javascript
+this.force = this.d3
+      ...
+      .on('tick', () => {
+        if (this.path) {
+          this.path.attr('d', this.linkArc)
+          this.circle.attr('transform', transform)
+          this.text.attr('transform', transform)
+        }
+      })
+
+  linkArc(d) {
+    const dx = d.target.x - d.source.x
+    const dy = d.target.y - d.source.y
+    const dr = Math.sqrt(dx * dx + dy * dy)
+    return (
+      'M' +
+      d.source.x +
+      ',' +
+      d.source.y +
+      'A' +
+      dr +
+      ',' +
+      dr +
+      ' 0 0,1 ' +
+      d.target.x +
+      ',' +
+      d.target.y
+    )
+  }
+```
+
+这里用字符串直接拼接了一小段 svg的指令, 效果是画出一条圆弧曲线, 完成上面的代码后, 我们得到的效果是:
+
+![all svg ready](https://raw.githubusercontent.com/ssthouse/d3-blog/master/mobile-patent-suit/img/circles_texts_lines.png)
+
+
+
+#### 添加图例
+
+现在我们已经基本完成了预期的效果, 但是图中缺少图例, 访问者会不理解不同颜色的曲线分别代表着什么含义, 所以我们在画面的左上角添加图例.
+
+
+
+图例的实现方法大致上面步骤相同, 但是有两个区别:
+
+- 图例是固定在画面左上角的, 坐标可以在代码中直接写死
+- 图例比真实数据多一个元素: 描述文字
+
+我们构造一下图例的数据:
+
+```javascript
+    const sampleData = [
+      {
+        source: { name: 'Nokia', x: xIndex, y: yIndex },
+        target: { name: 'Qualcomm', x: xIndex + 100, y: yIndex },
+        title: 'Still in suit:',
+        type: 'suit'
+      },
+      {
+        source: { name: 'Qualcomm', x: xIndex, y: yIndex + 100 },
+        target: { name: 'Nokia', x: xIndex + 100, y: yIndex + 100 },
+        title: 'Already resolved:',
+        type: 'resolved'
+      },
+      {
+        source: { name: 'Microsoft', x: xIndex, y: yIndex + 200 },
+        target: { name: 'Amazon', x: xIndex + 100, y: yIndex + 200 },
+        title: 'Locensing now:',
+        type: 'licensing'
+      }
+    ]
+    
+    const nodes = {}
+    sampleData.forEach((link, index) => {
+      nodes[link.source.name + index] = link.source
+      nodes[link.target.name + index] = link.target
+    })
+```
+
+按照同样的步骤, 我们画出图例:
+
+```javascript
+    sampleContainer
+      .selectAll('path')
+      .data(sampleData)
+      .enter()
+      .append('path')
+      .attr('class', d => 'link ' + d.type)
+      .attr('marker-end', d => 'url(#' + d.type + ')')
+      .attr('d', this.linkArc)
+
+    sampleContainer
+      .selectAll('circle')
+      .data(this.d3.values(nodes))
+      .enter()
+      .append('circle')
+      .attr('r', 10)
+      .style('cursor', 'pointer')
+      .attr('transform', d => `translate(${d.x}, ${d.y})`)
+
+    sampleContainer
+      .selectAll('.companyTitle')
+      .data(this.d3.values(nodes))
+      .enter()
+      .append('text')
+      .style('text-anchor', 'middle')
+      .attr('x', d => d.x)
+      .attr('y', d => d.y + 24)
+      .text(d => d.name)
+
+    sampleContainer
+      .selectAll('.title')
+      .data(sampleData)
+      .enter()
+      .append('text')
+      .attr('class', 'msg-title')
+      .style('text-anchor', 'end')
+      .attr('x', d => d.source.x - 30)
+      .attr('y', d => d.source.y + 5)
+      .text(d => d.title)
+```
+
+最终效果:
+
+![all svg ready](https://raw.githubusercontent.com/ssthouse/d3-blog/master/mobile-patent-suit/img/finished.png)
+
+
+
+### 总结
+
+使用 D3.js 进行这样的数据可视化非常简单, 而且非常灵活. 只是在使用 d3-force 时需要多调整一下参数来达到理想的效果, 实际实现的代码并不长, 逻辑代码放在这个文件中: [graphGenerator.js](), 感兴趣的读者不妨直接看看源码
