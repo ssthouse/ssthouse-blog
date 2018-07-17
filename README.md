@@ -6,15 +6,15 @@
 
 如果文章对你有帮助, 欢迎 **fork** & **star** :tada:
 
-你也可以在这里找到我:  [github主页](https://github.com/ssthouse) | [知乎专栏](https://zhuanlan.zhihu.com/c_196857379)  | [掘金](https://juejin.im/user/57bc46c8efa631005a891573/posts)
+你也可以在这里找到我: [github 主页](https://github.com/ssthouse) | [知乎专栏](https://zhuanlan.zhihu.com/c_196857379) | [掘金](https://juejin.im/user/57bc46c8efa631005a891573/posts)
 
 ## 目录
 
-## D3.js 简介
+### D3.js 简介
 
 [D3.js 学习之旅](https://github.com/ssthouse/d3-blog/blob/master/d3-guide/d3_roadmap_cn.md)
 
-## D3 selection
+### D3 selection
 
 [以 Join 的方式来思考 D3.js](https://github.com/ssthouse/d3-blog/blob/master/thinking-with-join/thinking-with-join.md)
 
@@ -24,7 +24,7 @@
 
 [[译]D3.js 之 d3-selection 原理](https://github.com/ssthouse/d3-blog/blob/master/how-selections-work/blog.md)
 
-## D3 shape
+### D3 shape
 
 [[译] D3.js 之 d3-shap 简介](https://github.com/ssthouse/d3-blog/blob/master/d3-shape-intro/blog.md)
 
@@ -32,4 +32,6 @@
 
 [使用 github pages, 快速部署你的静态网页](https://github.com/ssthouse/d3-blog/blob/master/use-github-page-efficiently/blog.md)
 
-[可视化讲解 DOM 构建过程](https://github.com/ssthouse/d3-blog/blob/master/dom-render/blog.md)  ==> [在线demo](https://ssthouse.github.io/visual-explain/#/list/domRender)
+[可视化讲解 DOM 构建过程](https://github.com/ssthouse/d3-blog/blob/master/dom-render/blog.md) ==> [在线 demo](https://ssthouse.github.io/visual-explain/#/list/domRender)
+
+[用 D3.js 画一个手机专利关系图, 看看苹果,三星,微软间的专利纠葛](https://github.com/ssthouse/d3-blog/blob/master/mobile-patent-suit/blog.md) ==> [在线 demo](https://ssthouse.github.io/visual-explain/#/list/patent-suit)
