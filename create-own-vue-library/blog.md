@@ -104,7 +104,28 @@ a {
 
 ## 配置 project
 
-首先我们添加 build 项目为 min.js 的脚本到 package.json 的 scripts 中:
+首先我们编辑入口文件 `src/components/index.js`, 使其被作为UI库导入时能自动先Vue中注册我们的Component:
+
+
+
+```javascript
+import Vue from 'vue'
+import TopBar from './TopBar.vue'
+const Components = {
+  TopBar
+}
+
+Object.keys(Components).forEach(name => {
+  Vue.component(name, Components[name])
+})
+
+export default Components
+
+```
+
+
+
+接下来我们添加 build 项目的脚本到 package.json 的 scripts 中:
 
 ```json
 "build-bundle": "vue-cli-service build --target lib --name personal-component-set ./src/components/index.js",
@@ -116,8 +137,90 @@ a {
 
 
 
+这里我们选择默认发布我们的 *.common.js 文件, 所以我们在 package.json中添加main属性:
 
+
+
+![build result](https://raw.githubusercontent.com/ssthouse/d3-blog/master/create-own-vue-library/img/package_main_attr.png)
+
+
+
+指定该属性后, 当我们引用该组件库时, 会默认加载main中指定的文件.
+
+
+
+最后, 我们再配置 package.json中的 files属性, 来配置我们想要发布到 npm上的文件路径. 我们这里将用户引用我们的组件库可能用到的所有文件都放进来:
+
+![build result](https://raw.githubusercontent.com/ssthouse/d3-blog/master/create-own-vue-library/img/package_files_attr.png)
 
 ## npm 发布
 
+首先我们注册一个 npm 账号 (如果已有账号, 可以跳过此步骤)
+
+```shell
+npm add user
+
+// 按照提示输入用户名, 邮箱等即可
+```
+
+然后使用 `npm login` 登录注册号的状态
+
+登录后可以使用 `npm whoami` 查看登录状态
+
+
+
+在发布之前, 我们修改一下项目的名称(注意不要和已有项目名称冲突):
+
+![build result](https://raw.githubusercontent.com/ssthouse/d3-blog/master/create-own-vue-library/img/package_name_attr.png)
+
+推荐使用 @username/projectName 的命名方式.
+
+
+
+接下来我们就可以发布我们的UI组件库了, 在发布之前我们再编译一次, 让build出的文件为我们最新的修改:
+
+
+
+```shell
+npm run build-bundle
+```
+
+我们使用下面的命令发布我们的项目:
+
+```shell
+npm publish --access public
+```
+
+需要注意的是 package.json中指定的version, 每次要更新我们的组件库都需要更新一下version(毕竟同一个version 的代码不同,很容易让人产生疑惑)
+
+
+
 ## 测试使用
+
+
+
+这样我们就完成了自己的UI组件库的发布. 接下来我们在任何需要使用到该组件库的项目中使用:
+
+```shell
+npm install --save @ssthouse/personal-component-set
+```
+
+然后再index文件 (如src/main.js) 中引入该组件库:
+
+```javascript
+import '@ssthouse/personal-component-set'
+```
+
+接下来我们就可以在 Vue的template中使用组件库中的 Component了:
+
+```html
+<template>
+  <v-app id="app">
+    <top-bar :sourceCodeLink="sourceCodeLink"></top-bar>
+    <router-view/>
+  </v-app>
+</template>
+```
+
+
+
