@@ -2,7 +2,7 @@
 
 ## 前言
 
-在使用 Vue 进行日常看法时, 我们经常会用到一些开源的 UI 库, 如: Element-UI, Vuetify. 只需一行命令, 即可方便的将这些库引入我们当前的项目:
+在使用 Vue 进行日常开发时, 我们经常会用到一些开源的 UI 库, 如: Element-UI, Vuetify. 只需一行命令, 即可方便的将这些库引入我们当前的项目:
 
 ```shell
 npm install vuetify
@@ -10,10 +10,10 @@ npm install vuetify
 yarn add vuetify
 ```
 
-但是当我们自己开发了一个 component, 然后需要在多个项目中使用的时候呢? 我们首先想到的可能是直接复制一份过去对吗? 这样做是很方便, 但是有两个问题:
+但是当我们自己开发了一个 component, 需要在多个项目中使用的时候呢? 我们首先想到的可能是直接复制一份过去对吗? 这样做是很方便, 但是有两个问题:
 
-- 当该 component 需要更新时, 我们需要手动维护所有引用到该 component 的更新
-- 当有多个 component 需要共享时, 手动复制太繁琐
+- 当该 component 需要更新时, 我们需要手动维护所有用到该 component 的更新
+- 当有多个 component 需要共享时, 手动复制过于繁琐
 
 那么, 我们为什么不发布一个 UI 组件库给自己用呢?
 
@@ -34,11 +34,11 @@ vue create personal-component-set
 
 ![empty prj](https://raw.githubusercontent.com/ssthouse/d3-blog/master/create-own-vue-library/img/empty_prj.png)
 
-接下来让我们写一个 Vue component, 这里我写了一个简单的顶栏控件, 用来展示页面标题, 我的个人信息, github 源码链接.
+接下来让我们写一个 Vue component. 这里我写了一个简单的顶栏控件, 用来展示页面标题, 我的个人信息, github 源码链接.
 
 component 代码如下:
 
-```javascript
+```html
 <template>
     <v-toolbar>
         <v-toolbar-side-icon @click="toMainPage()"></v-toolbar-side-icon>
@@ -94,9 +94,29 @@ a {
 
 以上代码构成了一个非常简单的 Vue component, 提供了一个 props: sourceCodeLink 方便定制化跳转链接, 提供了一个 event: to-main-page, 用户跳转回主页的回调.
 
-下面我们来配置当前项目, 以使其可以发布到npm上
+效果如图:
 
-## 配置 project &写一个 Hello World component
+![top bar](https://raw.githubusercontent.com/ssthouse/d3-blog/master/create-own-vue-library/img/top_bar.png)
+
+
+
+下面我们来配置当前项目, 以使其可以发布到 npm 上
+
+## 配置 project
+
+首先我们添加 build 项目为 min.js 的脚本到 package.json 的 scripts 中:
+
+```json
+"build-bundle": "vue-cli-service build --target lib --name personal-component-set ./src/components/index.js",
+```
+
+其中 `--name libraryName` 会指定要发布的库的名称, 我们执行上面新加的脚本:
+
+![build result](https://raw.githubusercontent.com/ssthouse/d3-blog/master/create-own-vue-library/img/run_build_bundle.png)
+
+
+
+
 
 ## npm 发布
 
