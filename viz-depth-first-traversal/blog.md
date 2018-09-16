@@ -40,8 +40,6 @@ var topItem = stack.pop()
 
 ![stack](https://raw.githubusercontent.com/ssthouse/d3-blog/master/viz-depth-first-traversal/img/demo.gif)
 
-
-
 可以看到，网页模拟了深度搜索时**二叉树**和**栈**的动态变化过程：
 
 - 二叉树中当前遍历到的节点会变成*红色*;
@@ -50,7 +48,7 @@ var topItem = stack.pop()
 
 其中页面左上角为初始遍历的二叉树数据， 用户可以修改二叉树数据后再次启动可视化深度优先遍历过程.
 
-页面左下角为深度优先遍历的javascript实现版本，作为参考.
+页面左下角为深度优先遍历的 javascript 实现版本，作为参考.
 
 ## 深度优先遍历简介
 
@@ -88,13 +86,9 @@ export class Node {
 
 代码不长，让我们一步步看.
 
-
-
 首先我们创建了一个栈 `const stack = [this.rootNode]` , 并将根节点放入栈中.
 
 接下来是一个*while*语句, 跳出循环的条件是 **栈为空**, 也就是代表我们遍历完了整棵树.
-
-
 
 在循环中, 我们先将栈顶的节点弹出, 并打印出来, 表示我们已经遍历过了该节点. 然后将该节点的所有子节点压入栈中, 这就保障了我们下一个遍历到的点就是该节点的子节点. 重复该循环, 最后我们就可以看到, 二叉树的每个节点都按照深度搜索的顺序被打印了出来:
 
@@ -108,7 +102,7 @@ current node: 5
 current node: 3
 ```
 
-如果是对栈的使用比较熟悉的同学, 可能看到这里就已经明白原理了. 
+如果是对栈的使用比较熟悉的同学, 可能看到这里就已经明白原理了.
 
 但是, 如果是对栈使用不是很熟悉的同学, 估计对代码的执行过程还是没有一个直观的认识, 那么让我们以更直观的方式看看这段代码是怎么运行的.
 
@@ -118,7 +112,7 @@ current node: 3
 
 ![step1](https://raw.githubusercontent.com/ssthouse/d3-blog/master/viz-depth-first-traversal/img/step1.png)
 
-接下来进入while循环, 每个循环都会将栈顶的节点弹出, 将其子节点压入栈中:
+接下来进入 while 循环, 每个循环都会将栈顶的节点弹出, 将其子节点压入栈中:
 
 ![step2](https://raw.githubusercontent.com/ssthouse/d3-blog/master/viz-depth-first-traversal/img/step2.gif)
 
@@ -126,33 +120,22 @@ current node: 3
 
 ![stack](https://raw.githubusercontent.com/ssthouse/d3-blog/master/viz-depth-first-traversal/img/demo.gif)
 
-
-
 ## 最后
 
-本文中的**二叉树**, **栈**的可视化是笔者自己封装的UI组件, 只需简单的调用就可以将代码中数据结构以可视化的方式显示在页面中. 
+本文中的**二叉树**, **栈**的可视化是笔者自己封装的 UI 组件, 只需简单的调用就可以将代码中数据结构以可视化的方式显示在页面中.
 
-个人觉得这样的**数据结构可视化**可能会对代码的讲解有些帮助, 如果你也有这方面的需求的话, 不妨在下面留言告诉我, 我可以将这些UI 组件封装一下方便有需要的人使用.
-
-
+个人觉得这样的**数据结构可视化**可能会对代码的讲解有些帮助, 如果你也有这方面的需求的话, 不妨在下面留言告诉我, 我可以将这些 UI 组件封装一下方便有需要的人使用.
 
 ## 想继续了解 D3.js || 数据可视化 ?
 
-
-这里是我的 _D3.js_ 、 _数据可视化_ 的github 地址, 欢迎 start & fork :tada:
-
+这里是我的 _D3.js_ 、 _数据可视化_ 的 github 地址, 欢迎 start & fork :tada:
 
 [D3-blog](https://github.com/ssthouse/d3-blog)
 
-
-
 ## 如果觉得不错的话, 不妨点击下面的链接关注一下 : )
 
-
-[github主页](https://github.com/ssthouse)
-
+[github 主页](https://github.com/ssthouse)
 
 [知乎专栏](https://zhuanlan.zhihu.com/c_196857379)
-
 
 [掘金](https://juejin.im/user/57bc46c8efa631005a891573/posts)
