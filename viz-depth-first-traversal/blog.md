@@ -113,8 +113,12 @@ current node: 3
 
 ## 可视化讲解
 
+第一步, 将根节点压入栈中:
+
 ![step1](https://raw.githubusercontent.com/ssthouse/d3-blog/master/viz-depth-first-traversal/img/step1.png)
 
+接下来进入while循环, 每个循环都会将栈顶的节点弹出, 将其子节点压入栈中:
 
+![step2](https://raw.githubusercontent.com/ssthouse/d3-blog/master/viz-depth-first-traversal/img/step2.gif)
 
 ## 代码讲解
