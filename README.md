@@ -34,8 +34,10 @@
 
 [可视化讲解 DOM 构建过程](https://github.com/ssthouse/d3-blog/blob/master/dom-render/blog.md) ==> [在线 demo](https://ssthouse.github.io/visual-explain/#/list/domRender)
 
+[可视化讲解 深度优先遍历 (DFT)](https://github.com/ssthouse/d3-blog/blob/master/viz-depth-first-traversal/blog.md) ==> [在线demo](https://ssthouse.github.io/visual-explain/#/list/dft)
+
 [用 D3.js 画一个手机专利关系图, 看看苹果,三星,微软间的专利纠葛](https://github.com/ssthouse/d3-blog/blob/master/mobile-patent-suit/blog.md) ==> [在线 demo](https://ssthouse.github.io/visual-explain/#/list/patent-suit)
 
-
 ### 前端 Tips:
+
 [创建, 发布自己的 Vue UI 组件库](https://github.com/ssthouse/d3-blog/blob/master/create-own-vue-library/blog.md)
