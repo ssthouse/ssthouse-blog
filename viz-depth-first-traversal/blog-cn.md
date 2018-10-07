@@ -36,6 +36,9 @@ var topItem = stack.pop()
 
 页面目前还在继续优化中， 让我们看看目前的效果：
 
+### 在线demo:
+https://ssthouse.github.io/visual-explain/#/list/dft
+
 ![stack](https://user-gold-cdn.xitu.io/2018/9/16/165e08e3c257ed58?w=1280&h=673&f=gif&s=2250747)
 
 可以看到，网页模拟了深度搜索时**二叉树**和**栈**的动态变化过程：
@@ -123,6 +126,10 @@ current node: 3
 本文中的**二叉树**, **栈**的可视化是笔者自己封装的 UI 组件, 只需简单的调用就可以将代码中数据结构以可视化的方式显示在页面中.
 
 个人觉得这样的**数据结构可视化**可能会对代码的讲解有些帮助, 如果你也有这方面的需求的话, 不妨在下面留言告诉我, 我可以将这些 UI 组件封装一下方便有需要的人使用.
+
+
+### 源码在这, 欢迎 fork & star
+https://github.com/ssthouse/visual-explain
 
 ## 想继续了解 D3.js || 数据可视化 ?
 
