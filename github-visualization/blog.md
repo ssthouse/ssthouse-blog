@@ -234,4 +234,7 @@ enableZoomFunc() {
 
 ##### 3D 实现
 
-3D 效果图中的布局使用的是 d3-layout 中的 pack layout, 3D 场景中的拖拽合缩放直接使用了插件:
+3D 效果图中的布局使用的是 d3-layout 中的 pack layout, 3D 场景中的拖拽合缩放直接使用了插件 **three-orbit-controls**
+
+#### 让我们来看看具体代码
+3D视图中, 承载所有UI组件的是 Three.js 中的Scene,
