@@ -1,29 +1,31 @@
 ### Github Repository 可视化 (D3.js & Three.js)
 
+先上 Demo 链接 & 效果图
 [demo 链接](https://ssthouse.github.io/github-visualization/)
 [github 链接](https://github.com/ssthouse/github-visualization)
 
 效果图 2D:
 ![demo 2d](https://raw.githubusercontent.com/ssthouse/d3-blog/master/github-visualization/img/visual-github-repo.gif)
 
-// TODO not completed yet!
 效果图 3D:
-![demo 3d]()
+![demo 3d](https://raw.githubusercontent.com/ssthouse/d3-blog/master/github-visualization/img/3D-demo.gif)
 
 ### 为什么要做这样一个网站?
 
-最初想法是因为 github 提供的 repository 查看的页面无法一次看到用户的所有 repository, 也无法直观的看到每个 repository 的量级对比(如 **commit** 数, **star** 数)
+最初想法是因为 github 提供的页面无法一次看到用户的所有 repository, 也无法直观的看到每个 repository 的量级对比(如 **commit** 数, **star** 数),
 
 所以希望做一个能直观展示用户所有 repository 的网站.
 
 ### 实现的功能有哪些?
+
+用户 Github Repository 数据的**2D**和**3D**展示, 点击用户 github 关注用户的头像, 可以查看他人的 Github Repository 展示效果.
 
 2D 和 3D 版本均支持:
 
 - 展示用户的 Repository 可视化效果
 - 点击 _following people_ 的头像查看他人的 Repository 可视化效果
 
-其中 2D 可视化支持页面缩放和拖拽 & 单个 Repository 的缩放和拖拽, 3D 可视化仅支持页面的缩放和拖拽.
+其中 2D 视图支持页面缩放和拖拽 && 单个 Repository 的缩放和拖拽, 3D 视图仅支持页面的缩放和拖拽.
 
 ### 用到了哪些技术?
 
@@ -36,7 +38,7 @@
 
 #### 2D 实现
 
-2D 效果图中, 每一个 Repository 用一个圆形表示, 圆形的大小代表了 _commit 数目 || start 数目 || fork 数目_
+2D 效果图中, 每一个 Repository 用一个圆形表示, 圆形的大小代表了 _commit 数目 || start 数目 || fork 数目_.
 
 布局使用的是 **d3-layout** 中的 **forceLayout**, 达到模拟物理碰撞的效果. 拖拽用到了 **d3-drag** 模块, 大致逻辑为:
 
@@ -44,9 +46,9 @@
 
 ==> 更新 UI 元素坐标
 
-==> 重新计算 forceLayout 的位置
+==> 重新计算布局坐标
 
-==> 更新 UI 来达到圆形单独拖拽的效果.
+==> 更新 UI 来达到圆形可拖拽的效果.
 
 ##### 让我们来看看具体代码:
 
@@ -54,8 +56,8 @@
 
 - `.force('charge', this.$d3.forceManyBody())` 添加节点之间的相互作用力
 - `.force('collide',radius)` 添加物理碰撞, 半径设置为圆形的半径
-- `.force('forceX', this.$d3.forceX(this.width / 2).strength(0.05))` 横坐标居中的作用力
-- `.force('forceY', this.$d3.forceY(this.height / 2).strength(0.05))` 纵坐标居中的作用力
+- `.force('forceX', this.$d3.forceX(this.width / 2).strength(0.05))` 添加横坐标居中的作用力
+- `.force('forceY', this.$d3.forceY(this.height / 2).strength(0.05))` 添加纵坐标居中的作用力
 
 主要代码如下:
 
@@ -74,10 +76,10 @@ this.simulation = this.$d3
 
 最后一行 `.on('tick', tick)` 为 force-layout simulation 的回调方法, 该方法会在物理引擎更新的每个周期被调用, 我们可以在这个回调方法中更新页面, 以达到动画效果.
 
-我们在这个 `tick` 回调中要做的就是: 刷新 svg 中 **circle** 和 html 的**span** 的坐标. 具体代码如下.
-如果用过 D3.js 的同学应该很熟悉这段代码了, 就是使用 d3-selection 对 DOM 元素的 `enter(), update(), exit()` 三种状态的简单控制.
+我们在这个 `tick` 回调中要完成的任务是: 刷新 **svg** 中 **circle** 和 **html** 的**span** 的坐标. 具体代码如下.
+如果用过 D3.js 的同学应该很熟悉这段代码了, 就是使用 d3-selection 对 DOM 元素 `enter(), update(), exit()` 三种状态进行的简单控制.
 
-这里需要注意的一点是, 我们没有使用 svg 的 **text** 元素来实现文字而是使用了 html 的 **span**, 目的是更好的控制文字换行.
+这里需要注意的一点是, 我们没有使用 **svg** 的 **text** 元素来实现文字而是使用了 **html** 的 **span**, 目的是更好的控制文字换行.
 
 ```javascript
 const tick = function() {
@@ -127,7 +129,7 @@ const tick = function() {
 ![enter view](https://raw.githubusercontent.com/ssthouse/d3-blog/master/github-visualization/img/enter-view.gif)
 
 但此时页面中的 圆圈 (circle)还不能响应鼠标拖拽事件, 让我们使用 d3-drag 加入鼠标拖拽功能.
-代码非常简单, 使用 d3-drag 处理 `start, drag, end` 三个鼠标事件即可:
+代码非常简单, 使用 d3-drag 处理 `start, drag, end` 三个鼠标事件的回调即可:
 
 - **start & drag** ==> 将当前节点的 `fx, fy` (即 forceX, forceY, 设置这两个值会让 force-layout 添加作用力将该节点移动到 `fx, fy`)
 - **end** ==> 拖拽事件结束, 清空选中节点的 `fx, fy`,
@@ -187,10 +189,10 @@ repositoryCircles
 repositoryCircles.exit().remove()
 ```
 
-现在我们便实现了拖拽效果:
+如此我们便实现了拖拽效果:
 ![enter view](https://raw.githubusercontent.com/ssthouse/d3-blog/master/github-visualization/img/drag-effect.gif)
 
-最后让我们加上 2D 界面的缩放功能, 这里使用的是 **d3-zoom**.和 d3-drag 类似, 我们只用处理鼠标滚轮缩放的回调事件即可:
+最后让我们加上 2D 界面的缩放功能, 这里使用的是 **d3-zoom**. 和 d3-drag 类似, 我们只用处理鼠标滚轮缩放的回调事件即可:
 
 ```javascript
 enableZoomFunc() {
@@ -232,11 +234,11 @@ enableZoomFunc() {
 
 以上便是 2D 效果实现的主要逻辑.
 
-##### 3D 实现
+#### 3D 实现
 
 3D 效果图中的布局使用的是 d3-layout 中的 pack layout, 3D 场景中的拖拽合缩放直接使用了插件 **three-orbit-controls**.
 
-#### 让我们来看看具体代码
+##### 让我们来看看具体代码
 
 ##### 创建基本 3D 场景
 
@@ -246,7 +248,7 @@ enableZoomFunc() {
 this.scene = new THREE.Scene()
 ```
 
-接下来我们需要一个 Render(渲染器)来将 Scene 中的画面渲染到 Web 页面上:
+接下来我们需要一个 **Render**(渲染器)来将 Scene 中的画面渲染到 Web 页面上:
 
 ```javascript
 this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
@@ -255,7 +257,7 @@ var contaienrElement = document.getElementById(this.containerId)
 contaienrElement.appendChild(this.renderer.domElement)
 ```
 
-然后我们需要加入 Light, 对 Three.js 了解过的同学应该很容易理解, 我们需要 Light 来照亮场景中的物体, 否则我们看到就是一片漆黑.
+然后我们需要加入 **Light**, 对 Three.js 了解过的同学应该很容易理解, 我们需要 Light 来照亮场景中的物体, 否则我们看到就是一片漆黑.
 
 ```javascript
 // add light
@@ -267,13 +269,13 @@ spotLight.lookAt(0, 0, 0)
 this.scene.add(spotLight)
 ```
 
-最后我们需要加入 Camera, 我们最终看到的 Scene 的样子就是从 Camera 的角度看到的样子. 我们使用 render 来将 Scene 从 Camera 看到的样子渲染出来:
+最后我们需要加入 **Camera**. 我们最终看到的 Scene 的样子就是从 Camera 的角度看到的样子. 我们使用 render 来将 Scene 从 Camera 看到的样子渲染出来:
 
 ```javascript
 this.renderer.render(this.scene, this.camera)
 ```
 
-但是这样子我们只是渲染了一次, 当 Scene 中的物理发生变化时, Web 页面上的 Canvas 并不会自动更新, 所以我们使用 requestAnimationFrame 这个 api 来实时刷新 Canvas.
+但是这样子我们只是渲染了一次页面, 当 Scene 中的物体发生变化时, Web 页面上的 Canvas 并不会自动更新, 所以我们使用 `requestAnimationFrame` 这个 api 来实时刷新 Canvas.
 
 ```javascript
   animate_() {
@@ -289,6 +291,14 @@ this.renderer.render(this.scene, this.camera)
 ![Pack Layout](https://raw.githubusercontent.com/ssthouse/d3-blog/master/github-visualization/img/pack-layout.png)
 
 这里我们只是想使用这个布局, 但是我们本身的数据不是嵌套式的, 所以我们手动将其包装一层, 使其变为嵌套的数据格式:
+
+```javascript
+{
+  "children": this.reporitoryList
+}
+```
+
+然后我们调用 D3 的**pack-layout**:
 
 ```javascript
 calcluate3DLayout_() {
@@ -307,7 +317,7 @@ calcluate3DLayout_() {
 ##### 创建表示 Repository 的球体
 
 这里我们使用 **THREE.SphereGeometry** 来创建球体, 球体的材质我们使用 **new THREE.MeshNormalMaterial()**. 这种材质的效果是, 我们从任何角度来看球体, 其四周颜色都是不变的.如图:
-![Normal Material](https://raw.githubusercontent.com/ssthouse/d3-blog/master/github-visualization/img/three-normal-material.gif)
+![Normal Material](https://raw.githubusercontent.com/ssthouse/d3-blog/master/github-visualization/img/three-normal-material.png)
 
 ```javascript
 addBallsToScene_() {
@@ -347,10 +357,12 @@ generateBallMesh_(xIndex, yIndex, radius, name) {
 
 ##### 创建表示 Repository 名称的 文字物体
 
-在一开始开发时, 我直接将为每一个 Repository 的文字创建一个 **TextGeometry**, 结果 3D 视图加载非常缓慢. 后来经过四处搜索,终于在 Three.js 的 github issue 里面的找到了比较好的解决方案:
+在一开始开发时, 我直接为每一个 Repository 的文字创建一个 **TextGeometry**, 结果 3D 视图加载非常缓慢. 后来经过四处搜索,终于在 Three.js 的 一个 github issue 里面的找到了比较好的解决方案:
 将 26 个英文字母分别创建 **TextGeometry**, 然后在创建每一个单词时, 使用现有的 26 个字母的 TextGeometry 拼接出单词, 这样就可以大幅节省创建 TextGeometry 的时间.
 讨论该 issue 的链接如下:
-https://github.com/mrdoob/three.js/issues/1825
+
+> github issue: https://github.com/mrdoob/three.js/issues/1825
+
 示例代码如下:
 
 ```javascript
@@ -409,3 +421,17 @@ addTextWithCharGroup(text, xIndex, yIndex, radius) {
 
 如上, 我们便完成了 3D 视图的搭建, 效果如图:
 ![3D effect](https://raw.githubusercontent.com/ssthouse/d3-blog/master/github-visualization/img/3D-effect.gif)
+
+## 想了解更多 D3.js 和 数据可视化 ?
+
+这里是我的 _D3.js_ 、 _数据可视化_ 的 github 地址, 欢迎 start & fork :tada:
+
+[D3-blog](https://github.com/ssthouse/d3-blog)
+
+## 如果觉得本文不错的话, 不妨点击下面的链接关注一下 : )
+
+[github 主页](https://github.com/ssthouse)
+
+[知乎专栏](https://zhuanlan.zhihu.com/c_196857379)
+
+[掘金](https://juejin.im/user/57bc46c8efa631005a891573/posts)
