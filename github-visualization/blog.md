@@ -424,7 +424,7 @@ addTextWithCharGroup(text, xIndex, yIndex, radius) {
 
 ## 想了解更多 D3.js 和 数据可视化 ?
 
-这里是我的 _D3.js_ 、 _数据可视化_ 的 github 地址, 欢迎 start & fork :tada:
+这里是我的 _D3.js_ 、 _数据可视化_ 的 github 地址, 欢迎 star & fork :tada:
 
 [D3-blog](https://github.com/ssthouse/d3-blog)
 
