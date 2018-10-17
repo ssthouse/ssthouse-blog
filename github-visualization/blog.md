@@ -234,7 +234,178 @@ enableZoomFunc() {
 
 ##### 3D 实现
 
-3D 效果图中的布局使用的是 d3-layout 中的 pack layout, 3D 场景中的拖拽合缩放直接使用了插件 **three-orbit-controls**
+3D 效果图中的布局使用的是 d3-layout 中的 pack layout, 3D 场景中的拖拽合缩放直接使用了插件 **three-orbit-controls**.
 
 #### 让我们来看看具体代码
-3D视图中, 承载所有UI组件的是 Three.js 中的Scene,
+
+##### 创建基本 3D 场景
+
+3D 视图中, 承载所有 UI 组件的是 Three.js 中的 Scene,首先我们初始化 **Scene**.
+
+```javascript
+this.scene = new THREE.Scene()
+```
+
+接下来我们需要一个 Render(渲染器)来将 Scene 中的画面渲染到 Web 页面上:
+
+```javascript
+this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
+this.renderer.setClearColor(0xeeeeee, 0.3)
+var contaienrElement = document.getElementById(this.containerId)
+contaienrElement.appendChild(this.renderer.domElement)
+```
+
+然后我们需要加入 Light, 对 Three.js 了解过的同学应该很容易理解, 我们需要 Light 来照亮场景中的物体, 否则我们看到就是一片漆黑.
+
+```javascript
+// add light
+var light = new THREE.AmbientLight(0x404040, 1) // soft white light
+this.scene.add(light)
+var spotLight = new THREE.DirectionalLight(0xffffff, 0.7)
+spotLight.position.set(0, 0, 200)
+spotLight.lookAt(0, 0, 0)
+this.scene.add(spotLight)
+```
+
+最后我们需要加入 Camera, 我们最终看到的 Scene 的样子就是从 Camera 的角度看到的样子. 我们使用 render 来将 Scene 从 Camera 看到的样子渲染出来:
+
+```javascript
+this.renderer.render(this.scene, this.camera)
+```
+
+但是这样子我们只是渲染了一次, 当 Scene 中的物理发生变化时, Web 页面上的 Canvas 并不会自动更新, 所以我们使用 requestAnimationFrame 这个 api 来实时刷新 Canvas.
+
+```javascript
+  animate_() {
+    requestAnimationFrame(() => this.animate_())
+    this.controls.update()
+    this.renderer.render(this.scene, this.camera)
+  }
+```
+
+##### 实现布局
+
+为了实现和 2D 视图中类似的布局效果, 我们使用了 D3 的 pack-layout, 其效果是实现嵌套式的圆形布局效果. 类似下图:
+![Pack Layout](https://raw.githubusercontent.com/ssthouse/d3-blog/master/github-visualization/img/pack-layout.png)
+
+这里我们只是想使用这个布局, 但是我们本身的数据不是嵌套式的, 所以我们手动将其包装一层, 使其变为嵌套的数据格式:
+
+```javascript
+calcluate3DLayout_() {
+  const pack = D3.pack()
+    .size([this.layoutSize, this.layoutSize])
+    .padding(5)
+  const rootData = D3.hierarchy({
+    children: this.reporitoryList
+  }).sum(d => Math.pow(d.count, 1 / 3))
+  this.data = pack(rootData).leaves()
+}
+```
+
+这样, 我们就完成了布局. 在控制台从查看 `this.data`, 我们就能看到每个节点的 `x, y`属性.
+
+##### 创建表示 Repository 的球体
+
+这里我们使用 **THREE.SphereGeometry** 来创建球体, 球体的材质我们使用 **new THREE.MeshNormalMaterial()**. 这种材质的效果是, 我们从任何角度来看球体, 其四周颜色都是不变的.如图:
+![Normal Material](https://raw.githubusercontent.com/ssthouse/d3-blog/master/github-visualization/img/three-normal-material.gif)
+
+```javascript
+addBallsToScene_() {
+  const self = this
+  if (!this.virtualElement) {
+    this.virtualElement = document.createElement('svg')
+  }
+  this.ballMaterial = new THREE.MeshNormalMaterial()
+  const circles = D3.select(this.virtualElement)
+    .selectAll('circle')
+    .data(this.data)
+  circles
+    .enter()
+    .merge(circles)
+    .each(function(d, i) {
+      const datum = D3.select(this).datum()
+      self.ballGroup.add(
+        self.generateBallMesh_(
+          self.indexScale(datum.x),
+          self.indexScale(datum.y),
+          self.volumeScale(datum.r),
+          i
+        )
+      )
+    })
+}
+
+generateBallMesh_(xIndex, yIndex, radius, name) {
+  var geometry = new THREE.SphereGeometry(radius, 32, 32)
+  var sphere = new THREE.Mesh(geometry, this.ballMaterial)
+  sphere.position.set(xIndex, yIndex, 0)
+  return sphere
+}
+```
+
+需要注意的是, 这里我们把所有的球体放置在 ballGroup 中, 并把 ballGroup 放置到 Scene 中, 这样便于管理所有的球体(比如清空所有球体).
+
+##### 创建表示 Repository 名称的 文字物体
+
+在一开始开发时, 我直接将为每一个 Repository 的文字创建一个 **TextGeometry**, 结果 3D 视图加载非常缓慢. 后来经过四处搜索,终于在 Three.js 的 github issue 里面的找到了比较好的解决方案:
+将 26 个英文字母分别创建 **TextGeometry**, 然后在创建每一个单词时, 使用现有的 26 个字母的 TextGeometry 拼接出单词, 这样就可以大幅节省创建 TextGeometry 的时间.
+讨论该 issue 的链接如下:
+https://github.com/mrdoob/three.js/issues/1825
+示例代码如下:
+
+```javascript
+// 事先将26个字母创建好 TextGeometry
+loadAlphabetGeoMap() {
+  const fontSize = 2.4
+  this.charGeoMap = new Map()
+  this.charWidthMap = new Map()
+  const chars =
+    '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-./?'
+  chars.split('').forEach(char => {
+    const textGeo = new THREE.TextGeometry(char, {
+      font: this.font,
+      size: fontSize,
+      height: 0.04
+    })
+    textGeo.computeBoundingBox()
+    const width = textGeo.boundingBox.max.x - textGeo.boundingBox.min.x
+    this.charGeoMap.set(char, textGeo)
+    this.charWidthMap.set(char, width)
+  })
+  console.log(this.charGeoMap)
+}
+
+// 创建整个单词时直接使用现有字母的 TextGeometry进行拼接
+addTextWithCharGroup(text, xIndex, yIndex, radius) {
+  const group = new THREE.Group()
+  const chars = text.split('')
+
+  let totalLen = 0
+  chars.forEach(char => {
+    if (!this.charWidthMap.get(char)) {
+      totalLen += 1
+      return
+    }
+    totalLen += this.charWidthMap.get(char)
+  })
+  const offset = totalLen / 2
+
+  for (let i = 0; i < chars.length; i++) {
+    const curCharGeo = this.charGeoMap.get(chars[i])
+    if (!curCharGeo) {
+      xIndex += 2
+      continue
+    }
+    const curMesh = new THREE.Mesh(curCharGeo, this.textMaterial)
+    curMesh.position.set(xIndex - offset, yIndex, radius + 2)
+    group.add(curMesh)
+    xIndex += this.charWidthMap.get(chars[i])
+  }
+  this.textGroup.add(group)
+}
+```
+
+需要注意的是该方法仅适用于英文, 如果是汉字的话, 我们是无法事先创建所有汉字的 TextGeometry 的, 这方面我暂时也还没找到合适的解决方案.
+
+如上, 我们便完成了 3D 视图的搭建, 效果如图:
+![3D effect](https://raw.githubusercontent.com/ssthouse/d3-blog/master/github-visualization/img/3D-effect.gif)
