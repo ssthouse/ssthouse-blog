@@ -8,6 +8,14 @@
 
 你也可以在这里找到我: [github 主页](https://github.com/ssthouse) | [知乎专栏](https://zhuanlan.zhihu.com/c_196857379) | [掘金](https://juejin.im/user/57bc46c8efa631005a891573/posts)
 
+## 想直接联系我 ?
+
+邮箱: ssthouse@163.com
+
+微信:
+
+![wechat](https://github.com/ssthouse/d3-blog/raw/master/img/QR_300px.png)
+
 ## 目录
 
 ### D3.js 简介
