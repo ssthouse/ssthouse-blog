@@ -63,26 +63,24 @@ d3-shape 是一个让你进行数据可视化的工具. 它特别适合和已有
 
 祝你 d3-shape 使用愉快!
 
-
-
 ## 想继续了解 D3.js
 
-
-这里是我的 _D3.js_ 、 _数据可视化_ 的github 地址, 欢迎 start & fork :tada:
-
+这里是我的 _D3.js_ 、 _数据可视化_ 的 github 地址, 欢迎 start & fork :tada:
 
 [D3-blog](https://github.com/ssthouse/d3-blog)
 
-
-
-
 ## 如果觉得不错的话, 不妨点击下面的链接关注一下 : )
 
-
-[github主页](https://github.com/ssthouse)
-
+[github 主页](https://github.com/ssthouse)
 
 [知乎专栏](https://zhuanlan.zhihu.com/c_196857379)
 
-
 [掘金](https://juejin.im/user/57bc46c8efa631005a891573/posts)
+
+## 想直接联系我 ?
+
+邮箱: ssthouse@163.com
+
+微信:
+
+![wechat](https://github.com/ssthouse/d3-blog/raw/master/img/QR_300px.png)

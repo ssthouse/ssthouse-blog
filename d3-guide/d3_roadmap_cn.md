@@ -116,3 +116,11 @@ D3中非常让人们感到惊艳的功能之一是 `d3 force layout`. 它非常�
 ![how I see the d3 community and the many learning curves one encounters on their journey](https://cdn-images-1.medium.com/max/5100/1*gybGRNFfU-ZBYtK3D1qGYA.png)*我对于D3社区 和 D3学习过程中困难的理解*
 
 *非常感谢 [Erik Hazzard](https://twitter.com/erikhazzard) 帮助我编辑和润色这篇文章. 感谢 [Kai Chang](https://twitter.com/syntagmatic) 对于文章提出的建议, 更加感谢你对于 d3 社区的帮助. 感谢slack channel #teaching-d3 in the [d3js Slack](http://d3-slackin.herokuapp.com), 特别是 [Sebastian](https://twitter.com/dashingd3js) 和 [John](https://twitter.com/JFSIII) 的反馈. 当然了, 最最感谢D3的作者 [Mike Bostock](https://twitter.com/mbostock) 创造了一个能让我们所有人玩耍的乐园 !*
+
+## 想直接联系我 ?
+
+邮箱: ssthouse@163.com
+
+微信:
+
+![wechat](https://github.com/ssthouse/d3-blog/raw/master/img/QR_300px.png)

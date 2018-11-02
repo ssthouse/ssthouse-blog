@@ -216,3 +216,11 @@ var td = d3.selectAll('tbody tr').select('td')
 [知乎专栏](https://zhuanlan.zhihu.com/c_196857379)
 
 [掘金](https://juejin.im/user/57bc46c8efa631005a891573/posts)
+
+## 想直接联系我 ?
+
+邮箱: ssthouse@163.com
+
+微信:
+
+![wechat](https://github.com/ssthouse/d3-blog/raw/master/img/QR_300px.png)

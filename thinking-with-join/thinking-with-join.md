@@ -118,3 +118,11 @@ circle.exit().transition()
 - [在线演示](https://ssthouse.github.io/d3-practice/#/root)
 - [源代码](https://github.com/ssthouse/d3-practice)
 
+
+## 想直接联系我 ?
+
+邮箱: ssthouse@163.com
+
+微信:
+
+![wechat](https://github.com/ssthouse/d3-blog/raw/master/img/QR_300px.png)
