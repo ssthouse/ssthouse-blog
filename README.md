@@ -46,6 +46,8 @@
 
 [用 D3.js 画一个手机专利关系图, 看看苹果,三星,微软间的专利纠葛](https://github.com/ssthouse/d3-blog/blob/master/mobile-patent-suit/blog.md) ==> [在线 demo](https://ssthouse.github.io/visual-explain/#/list/patent-suit)
 
+[Github Repository 数据可视化](https://github.com/ssthouse/d3-blog/blob/master/github-visualization/blog.md) ==> [在线 demo](https://ssthouse.github.io/github-visualization/#/main)
+
 ### 前端 Tips:
 
 [创建, 发布自己的 Vue UI 组件库](https://github.com/ssthouse/d3-blog/blob/master/create-own-vue-library/blog.md)
