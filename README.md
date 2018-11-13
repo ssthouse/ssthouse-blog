@@ -51,3 +51,5 @@
 ### 前端 Tips:
 
 [创建, 发布自己的 Vue UI 组件库](https://github.com/ssthouse/d3-blog/blob/master/create-own-vue-library/blog.md)
+
+[Attribute VS Property](https://github.com/ssthouse/d3-blog/blob/master/frontend/attr-vs-prop/attr_vs_prop_cn.md)
