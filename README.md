@@ -55,3 +55,6 @@
 [前端杂谈: Attribute VS Property](https://github.com/ssthouse/d3-blog/blob/master/frontend/attr-vs-prop/attr_vs_prop_cn.md)
 
 [前端杂谈: CSS 权重 (Specificity)](https://github.com/ssthouse/d3-blog/blob/master/frontend/css-specificity/css-specificity.md)
+
+
+[前端杂谈: DOM event 原理](https://github.com/ssthouse/d3-blog/blob/master/frontend/dom-event/how_dom_event_works_cn.md)
