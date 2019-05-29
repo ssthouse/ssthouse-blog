@@ -13,8 +13,8 @@
 邮箱: ssthouse@163.com
 
 微信:
-
-![wechat](https://github.com/ssthouse/d3-blog/raw/master/img/QR_300px.png)
+(注: 如是对文章有疑问,请直接在文章下面留言 || 提issue,无需加微信~)
+![wechat](https://github.com/ssthouse/ssthouse-blog/raw/master/img/QR_300px.png)
 
 ## 目录
 
@@ -58,3 +58,7 @@
 
 
 [前端杂谈: DOM event 原理](https://github.com/ssthouse/d3-blog/blob/master/frontend/dom-event/how_dom_event_works_cn.md)
+
+### 小程序
+
+[多图列表 性能优化](https://github.com/ssthouse/d3-blog/blob/master/mini-program/小程序中列表渲染优化.md)
