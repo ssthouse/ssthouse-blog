@@ -14,6 +14,7 @@
 
 微信:
 (注: 如是对文章有疑问,请直接在文章下面留言 || 提issue,无需加微信~)
+
 ![wechat](https://github.com/ssthouse/ssthouse-blog/raw/master/img/QR_300px.png)
 
 ## 目录
