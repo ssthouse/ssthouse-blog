@@ -130,3 +130,7 @@ Specificity 是由 selector 中 不同 **selector type** 的数目决定的.
 ## 想直接联系我 ?
 
 邮箱: ssthouse@163.com
+
+微信:
+
+![image-20190729170042724](http://ww4.sinaimg.cn/large/006tNc79gy1g5gteujraqj31040fb78s.jpg)

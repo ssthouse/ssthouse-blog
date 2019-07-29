@@ -83,4 +83,4 @@ d3-shape 是一个让你进行数据可视化的工具. 它特别适合和已有
 
 微信:
 
-![wechat](https://github.com/ssthouse/d3-blog/raw/master/img/QR_300px.png)
+![image-20190729170042724](http://ww4.sinaimg.cn/large/006tNc79gy1g5gteujraqj31040fb78s.jpg)

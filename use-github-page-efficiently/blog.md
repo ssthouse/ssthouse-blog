@@ -286,4 +286,4 @@ github pages 可以说是为我节省了许多的时间, 为我开发 demo 展�
 
 微信:
 
-![wechat](https://github.com/ssthouse/d3-blog/raw/master/img/QR_300px.png)
+![image-20190729170042724](http://ww4.sinaimg.cn/large/006tNc79gy1g5gteujraqj31040fb78s.jpg)

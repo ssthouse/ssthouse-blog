@@ -8,14 +8,13 @@
 
 你也可以在这里找到我: [github 主页](https://github.com/ssthouse) | [知乎专栏](https://zhuanlan.zhihu.com/c_196857379) | [掘金](https://juejin.im/user/57bc46c8efa631005a891573/posts)
 
+**微信公众号:**
+
+![image-20190729170042724](http://ww4.sinaimg.cn/large/006tNc79gy1g5gteujraqj31040fb78s.jpg)
+
 ## 想直接联系我 ?
 
 邮箱: ssthouse@163.com
-
-微信:
-(注: 如是对文章有疑问,请直接在文章下面留言 || 提issue,无需加微信~)
-
-![wechat](https://github.com/ssthouse/ssthouse-blog/raw/master/img/QR_300px.png)
 
 ## 目录
 
