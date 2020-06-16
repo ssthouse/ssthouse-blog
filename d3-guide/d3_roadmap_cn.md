@@ -123,4 +123,4 @@ D3中非常让人们感到惊艳的功能之一是 `d3 force layout`. 它非常�
 
 微信:
 
-![image-20190729170042724](http://ww4.sinaimg.cn/large/006tNc79gy1g5gteujraqj31040fb78s.jpg)
+![wechat](https://github.com/ssthouse/d3-blog/raw/master/img/QR_300px.png)
