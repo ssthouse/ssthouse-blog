@@ -43,7 +43,7 @@
 
 ![[SVG Beyond Mere Shapes](https://www.visualcinnamon.com/2016/04/svg-beyond-mere-shapes.html) 是对web标准的图形操作非常棒的展示](https://cdn-images-1.medium.com/max/4432/1*TwUCVhrN9Xltsj3sDgntUQ.png)*[SVG Beyond Mere Shapes](https://www.visualcinnamon.com/2016/04/svg-beyond-mere-shapes.html) 是对web标准的图形操作非常棒的展示*
 
-我们选择D3的原因之一是: 你可以非常方便的将你的作品分享给任何有浏览器的人. 这意味着你需要对于HTML5有一个基本的了解. 在你开始学习D3的API之前, 你应该已经掌握 SVG, HMTL 和 CSS的基本知识. 如果有时间的话, 你最好看看这篇讲Canvas的文章(如果你要展示的数据数据量非常大的话) [learn some Canvas](https://www.w3schools.com/html/html5_canvas.asp) . 我推荐你也看看这篇, 它能帮你很好的将Canvas和D3结合使用 [this is a great intermediate tutorial](https://medium.freecodecamp.com/d3-and-canvas-in-3-steps-8505c8b27444).
+我们选择D3的原因之一是: 你可以非常方便的将你的作品分享给任何有浏览器的人. 这意味着你需要对于HTML5有一个基本的了解. 在你开始学习D3的API之前, 你应该已经掌握 SVG, HTML 和 CSS, 如需深入了解 CSS，[请参阅](https://www.scaler.com/topics/css/). 的基本知识. 如果有时间的话, 你最好看看这篇讲Canvas的文章(如果你要展示的数据数据量非常大的话) [learn some Canvas](https://www.w3schools.com/html/html5_canvas.asp) . 我推荐你也看看这篇, 它能帮你很好的将Canvas和D3结合使用 [this is a great intermediate tutorial](https://medium.freecodecamp.com/d3-and-canvas-in-3-steps-8505c8b27444).
 
 对于SVG, 我推荐看看这个简短有趣的介绍 [SVG primer](http://alignedleft.com/tutorials/d3/an-svg-primer) 来自 [Scott Murray](http://twitter.com/alignedleft). 使用工具: [BlockBuilder](http://blockbuilder.org) 来迅速开始你的coding而不用费时配置开发环境. 你也可以看看MDN对于SVG的官方文档 [MDN reference site for SVG](https://developer.mozilla.org/en-US/docs/Web/SVG). 等你掌握了SVG的基础知识后, 你可以再看看这篇文章, 可以让你对SVG有一个更深的理解 [SVG beyond mere shapes](https://www.visualcinnamon.com/2016/04/svg-beyond-mere-shapes.html) 来自 [Nadieh Bremer](http://visualcinnamon.com).
 
